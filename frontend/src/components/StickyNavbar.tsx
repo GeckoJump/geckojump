@@ -1,4 +1,5 @@
 import React from 'react'
+import logo from '../logo.png'
 
 // Stick the navbar to the top of the page, when the user scrolls
 // it should stick to the top of the page and become opaque
@@ -9,8 +10,8 @@ export const StickyNavbar = () => {
       <div className="container w-3/5 py-3 ">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
-            <a className="text-white text-xl font-bold md:text-2xl hover:text-gray-200" href="#">
-              Brand
+            <a className="" href="#">
+              <img src={logo} style={{filter: 'invert(49%) sepia(92%) saturate(379%) hue-rotate(110deg) brightness(96%) contrast(99%)'}} className='text-slate-900 dark:text-white w-auto h-8'/>
             </a>
           </div>
           <div className="flex items-center gap-x-5">

@@ -8,14 +8,12 @@ interface FeatureProps {
 
 export const Feature = ({ title, description, icon }: FeatureProps) => {
   return (
-    <div className="grid grid-cols-[1fr_3fr] gap-4">
-      <div className="flex items-center justify-center align-middle">
+    <div className="flex flex-col align-baseline">
+      <div className="mx-auto mb-3">
         {icon}
       </div>
-      <div>
-        <h3 className="text-balance text-lg font-bold pb-2">{title}</h3>
-        <p className="text-gray-500">{description}</p>
-      </div>
+      <h3 className="text-xl font-sans font-bold pb-2 text-center">{title}</h3>
+      <p className="text-gray-500 text-center">{description}</p>
     </div>
   )
 }

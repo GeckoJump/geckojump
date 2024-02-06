@@ -17,11 +17,11 @@ export const HeroSection = () => {
 
   return (
     <div className="flex flex-col">
-      <section className="bg-gray-900 text-white">
+      <section className="bg-background text-white">
         <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
-          <div className="mx-auto max-w-3xl w-full text-center">
+          <div className="flex flex-col justify-center mx-auto max-w-3xl w-full text-center">
             <h1
-              className="bg-gradient-to-r from-green-300 via-blue-500 to-purple-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl"
+              className="bg-gradient-to-r from-green-700 via-green-400 to-blue-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-5xl"
             >
               <TypeAnimation
                 wrapper="span"
@@ -37,25 +37,9 @@ export const HeroSection = () => {
                 />
             </h1>
 
-            <p className={`mx-auto mt-4 max-w-lg sm:text-xl/relaxed transition-all duration-1000 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
-              We specialize in crafting tailored software solutions for your business needs.
+            <p className={`mx-auto mt-4 max-w-md sm:text-xl/relaxed transition-all duration-1000 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
+              We specialize in crafting custom software solutions by understanding your business needs.
             </p>
-
-            <div className={`mt-8 flex flex-wrap justify-center gap-4 transition-opacity delay-1000 duration-1000 opacity-${typedOut ? '100' : '0'}`}>
-              <a
-                className="block w-full rounded border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-transparent hover:text-white focus:outline-none focus:ring active:text-opacity-75 sm:w-auto"
-                href="/get-started"
-              >
-                Get Started
-              </a>
-
-              <a
-                className="block w-full rounded border border-blue-600 px-12 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring active:bg-blue-500 sm:w-auto"
-                href="/about"
-              >
-                Learn More
-              </a>
-            </div>
           </div>
         </div>
       </section>
