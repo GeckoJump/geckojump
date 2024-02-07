@@ -7,7 +7,7 @@ export interface TwoSidedLayoutProps {
 
 export const TwoSidedLayout = ({ children, additionalClasses }: TwoSidedLayoutProps) => {
   return (
-    <div className={`grid grid-cols-2 w-3/5 mx-auto gap-10 ${additionalClasses ?? ''}`}>
+    <div className={`grid lg:grid-cols-2 md:grid-cols-1 lg:w-3/5 md:4/5 mx-auto gap-10 ${additionalClasses ?? ''}`}>
       <div>
         {children[0]}
       </div>

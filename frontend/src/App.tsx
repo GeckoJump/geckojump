@@ -14,9 +14,9 @@ function App() {
       <StickyNavbar />
       <HeroSection />
       <ServicesSection />
-      <TwoSidedLayout additionalClasses='pt-48'>
+      <TwoSidedLayout additionalClasses='pt-24 lg:pt-48'>
         <SoftwareServices />
-        <img src={TechIllustration1} alt='Tech Illustration 1' />
+        <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
       </TwoSidedLayout>
       <Footer />
     </>

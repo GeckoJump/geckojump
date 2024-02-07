@@ -1,12 +1,12 @@
 import React from 'react'
 
-interface FeatureProps {
+interface ValueItemProps {
   title: string
   description: string
   icon: React.ReactNode
 }
 
-export const Feature = ({ title, description, icon }: FeatureProps) => {
+export const ValueItem = ({ title, description, icon }: ValueItemProps) => {
   return (
     <div className="flex flex-col align-baseline">
       <div className="mx-auto mb-3">

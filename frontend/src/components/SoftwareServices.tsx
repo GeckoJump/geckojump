@@ -1,26 +1,22 @@
 import React from 'react'
+import { SoftwareServiceItem } from './SoftwareServiceItem'
+import { FaCheckCircle } from 'react-icons/fa'
 
 export const SoftwareServices = () => {
   return (
-    <ol className="border-l border-neutral-300 dark:border-neutral-500">
-      <li>
-        <div className="flex-start flex items-center pt-3">
-          <div
-            className="-ml-[5px] mr-3 h-[9px] w-[9px] rounded-full bg-neutral-300 dark:bg-neutral-500"></div>
-          <p className="text-sm text-neutral-500 dark:text-neutral-300">
-            01.07.2021
-          </p>
-        </div>
-        <div className="mb-6 ml-4 mt-2">
-          <h4 className="mb-1.5 text-xl font-semibold">Title of section 1</h4>
-          <p className="mb-3 text-neutral-500 dark:text-neutral-300">
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque
-            scelerisque diam non nisi semper, et elementum lorem ornare.
-            Maecenas placerat facilisis mollis. Duis sagittis ligula in
-            sodales vehicula.
-          </p>
-        </div>
-      </li>
-    </ol>
+    <div className="flex flex-col align-baseline">
+      <h2 className="text-3xl font-sans font-bold pb-2 text-center">Software Services</h2>
+      <p className="text-gray-500 text-center mb-10">We offer a variety of software services to help you get started with your project.</p>
+      <SoftwareServiceItem 
+        title="Web Development"
+        description="We can help you build a website that will help you succeed. Our team has the expertise to provide the best solutions for your business."
+        icon={<FaCheckCircle size={16} />} 
+      />
+      <SoftwareServiceItem 
+        title="Web Development"
+        description="We can help you build a website that will help you succeed. Our team has the expertise to provide the best solutions for your business."
+        icon={<FaCheckCircle size={16} />} 
+      />
+    </div>
   )
 }
