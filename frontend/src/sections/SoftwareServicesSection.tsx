@@ -1,10 +1,10 @@
 import React from 'react'
-import { SoftwareServiceItem } from './SoftwareServiceItem'
+import { SoftwareServiceItem } from '../components/SoftwareServiceItem'
 import { FaCheckCircle } from 'react-icons/fa'
 import { GoGoal } from "react-icons/go";
 import { IoIosPeople } from "react-icons/io";
 
-export const SoftwareServices = () => {
+export const SoftwareServicesSection = () => {
   return (
     <div className="flex flex-col align-baseline">
       <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">Software <span className='text-emerald-700'>For You</span></h2>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { FaRegHandshake } from "react-icons/fa";
-import { ValueItem } from './ValueItem'
+import { ValueItem } from '../components/ValueItem'
 import { useInView } from 'react-intersection-observer';
 
 export const ServicesSection = () => {
