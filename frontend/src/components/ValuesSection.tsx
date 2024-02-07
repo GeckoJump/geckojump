@@ -7,8 +7,8 @@ export const ServicesSection = () => {
     <div className='flex flex-col justify-center align-middle'>
       <div className='values-header text-center pb-8 px-2'>
         <h2 className='text-4xl font-bold font-BebasNeue'>WHY <span className='text-emerald-700'>CHOOSE US</span></h2>
-        <p className='text-gray-500 mt-1 w-1/3 mx-auto'>
-          We are <span className="font-bold italic">not</span> just another software company. We're a team of experts dedicated to helping your business <span className="font-bold">succeed</span>.
+        <p className='text-gray-500 mt-1 w-2/5 mx-auto'>
+          Our commitment to <span className="font-bold">you</span> extends beyond delivering premium software solutions. We are dedicated to building long-lasting, quality relationships with our clients.
         </p>
       </div>
       <div className='values grid md:grid-cols-2 sm:grid-cols-1 max-w-screen-sm mx-auto gap-6'>
