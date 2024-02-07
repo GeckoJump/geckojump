@@ -6,7 +6,7 @@ import logo from '../logo.png'
 export const StickyNavbar = () => {
   
   return (
-    <nav className="fixed flex justify-center z-100 w-full bg-background left-1/2 -translate-x-1/2">
+    <nav className="fixed flex justify-center w-full z-[999] bg-background bg-opacity-100 left-1/2 -translate-x-1/2">
       <div className="container w-3/5 py-3 ">
         <div className="flex items-center justify-between">
           <div className="flex items-center">
