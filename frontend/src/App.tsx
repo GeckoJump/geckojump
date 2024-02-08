@@ -20,6 +20,11 @@ function App() {
         <SoftwareServicesSection />
         <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
       </TwoSidedLayout>
+      <SectionDivider className='pt-12 lg:pt-48' />
+      <TwoSidedLayout>
+        <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
+        <SoftwareServicesSection />
+      </TwoSidedLayout>
       <Footer />
     </>
   );
