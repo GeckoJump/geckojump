@@ -37,7 +37,7 @@ export const HeroSection = () => {
                 speed={50}
                 />
             </h1>
-            <p className={`mx-auto mt-4 max-w-md sm:text-xl/relaxed transition-all duration-1000 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
+            <p className={`mx-auto mt-4 max-w-md sm:text-xl/relaxed transition-all duration-1000 text-slate-200 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
               We specialize in crafting custom software solutions by understanding your business needs.
             </p>
           </div>

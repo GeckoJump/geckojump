@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '../logo.png'
 
 const NavLinkClasses = "text-zinc-200 p-3 transition-all duration-300 ease-in-out hover:font-bold"
@@ -6,6 +6,7 @@ const NavLinkClasses = "text-zinc-200 p-3 transition-all duration-300 ease-in-ou
 // Stick the navbar to the top of the page, when the user scrolls
 // it should stick to the top of the page and become opaque
 export const StickyNavbar = () => {
+  const [isNavOpen, setIsNavOpen] = useState(false);
   
   return (
     <nav className="fixed flex justify-center w-full z-[999] bg-background bg-opacity-100 left-1/2 -translate-x-1/2 shadow-xl">
