@@ -7,6 +7,7 @@ import { Footer } from './components/Footer';
 import { TwoSidedLayout } from './components/TwoSidedLayout';
 import { SoftwareServicesSection } from './sections/SoftwareServicesSection';
 import TechIllustration1 from './svg/tech-illustration-1.svg'
+import { SectionDivider } from './components/SectionDivider';
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
       <StickyNavbar />
       <HeroSection />
       <ServicesSection />
-      <TwoSidedLayout additionalClasses='pt-24 lg:pt-48'>
+      <SectionDivider className='pt-12 lg:pt-48' />
+      <TwoSidedLayout>
         <SoftwareServicesSection />
         <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
       </TwoSidedLayout>

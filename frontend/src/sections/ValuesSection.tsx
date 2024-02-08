@@ -13,7 +13,7 @@ export const ServicesSection = () => {
   return (
     <div ref={ref}>
       <div className={`flex flex-col justify-center align-middle duration-1000 ${inView ? 'transition-all opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-8'}`}>
-        <div className='values-header text-center pb-8 px-2'>
+        <div className='values-header text-center px-2'>
           <h2 className='text-4xl font-bold font-BebasNeue'>WHY <span className='text-emerald-700'>CHOOSE US</span></h2>
           <p className='text-gray-500 mt-1 lg:w-2/5 md:w-4/5 mx-auto'>
             Our commitment to <span className="font-bold">you</span> extends beyond delivering premium software solutions. We are dedicated to building long-lasting, quality relationships with our clients.
