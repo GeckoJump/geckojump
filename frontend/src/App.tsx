@@ -10,6 +10,7 @@ import TechIllustration1 from './svg/tech-illustration-1.svg'
 import TechIllustration2 from './svg/tech-illustration-2.svg'
 import { SectionDivider } from './components/SectionDivider';
 import { ConsultingServicesSection } from './sections/ConsultingServicesSection';
+import { ContactSection } from './sections/ContactSection';
 
 function App() {
   return (
@@ -27,6 +28,8 @@ function App() {
         <img src={TechIllustration2} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
         <ConsultingServicesSection />
       </TwoSidedLayout>
+      <SectionDivider className='pt-12 lg:pt-24' />
+      <ContactSection />
       <Footer />
     </>
   );

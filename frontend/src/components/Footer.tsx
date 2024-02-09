@@ -17,7 +17,7 @@ const LINKS = [
 
 export const Footer = () => {
   return (
-    <div className="flex justify-center w-full bg-background py-10 mt-32">
+    <div className="flex justify-center w-full bg-background py-10">
       <div className="container flex flex-col w-3/5">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {LINKS.map((link, i) => (

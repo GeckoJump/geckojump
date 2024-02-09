@@ -15,7 +15,7 @@ export const ServicesSection = () => {
   })
 
   return (
-    <div ref={ref} className='snap-center scroll-mt-10'>
+    <div ref={ref} className='snap-center scroll-mt-16'>
       <div className={`flex flex-col justify-center align-middle duration-1000 ${inView ? 'transition-all opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-8'}`}>
         <div className='text-center px-2 mb-2'>
           <h2 className='text-4xl font-bold font-BebasNeue'>WHY <span className='text-emerald-700'>CHOOSE US</span></h2>
