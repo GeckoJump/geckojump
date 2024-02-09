@@ -35,12 +35,12 @@ export const ServicesSection = () => {
             icon={<GoGoal className='text-4xl' />}
           />
           <ValueItem
-            title='Expertise'
+            title='Software Expertise'
             description='Our team has the expertise to provide the best solutions for your business.'
             icon={<IoIosConstruct className='text-4xl' />}
           />
           <ValueItem
-            title='Innovation'
+            title='Constant Innovation'
             description='We are always looking for innovative ways to help your business succeed.'
             icon={<RiLightbulbFlashFill className='text-4xl' />}
           />
