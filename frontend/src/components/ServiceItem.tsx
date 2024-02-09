@@ -6,7 +6,7 @@ interface SoftwareServiceItemProps {
   icon: React.ReactNode
 }
 
-export const SoftwareServiceItem = ({ title, description, icon }: SoftwareServiceItemProps) => {
+export const ServiceItem = ({ title, description, icon }: SoftwareServiceItemProps) => {
   return (
     <div className="flex flex-col align-baseline">
       <h3 className="flex flex-row text-xl leading-snug font-sans font-bold p-3 pl-0 gap-2 lg:justify-start justify-center">

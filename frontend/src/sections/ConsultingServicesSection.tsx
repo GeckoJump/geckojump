@@ -1,13 +1,12 @@
 import React from 'react'
 import { ServiceItem } from '../components/ServiceItem'
-import { FaCheckCircle } from 'react-icons/fa'
 import { GoGoal } from "react-icons/go";
 import { IoIosPeople } from "react-icons/io";
 
-export const SoftwareServicesSection = () => {
+export const ConsultingServicesSection = () => {
   return (
     <div className="flex flex-col align-baseline snap-center">
-      <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">Software <span className='text-emerald-700'>For You</span></h2>
+      <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">Consulting <span className='text-emerald-700'>For You</span></h2>
       <p className="text-gray-500 text-center mb-10">Empowering your Vision with customized software solutions crafted specifically for your unique needs.</p>
       <ServiceItem 
         title="Let's Talk About Your Goals"
