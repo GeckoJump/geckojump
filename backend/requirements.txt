@@ -1,0 +1,6 @@
+Flask
+flask-cors
+flask-restful
+Authlib
+requests
+pyjwt
