@@ -6,6 +6,7 @@ const Login: React.FC = () => {
   const { login } = useAuth();
 
   useEffect(() => {
+    console.log('useEffect for Login');
     const handleLoginRedirect = async () => {
       const queryParams = new URLSearchParams(window.location.search);
       const token = queryParams.get('token');
@@ -13,7 +14,8 @@ const Login: React.FC = () => {
       if (token) {
         login(token); // Assuming your login function is now adapted to accept the token as an argument
         // Redirect to dashboard or another page as needed
-        window.location.href = '/dashboard';
+      }else {
+        console.log('token not found...');
       }
     };
 

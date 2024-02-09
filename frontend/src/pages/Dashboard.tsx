@@ -5,10 +5,28 @@ import StickyNavbar from '../components/StickyNavbar';
 
 const useUserInfo = () => {
   const [userEmail, setUserEmail] = useState<string>('');
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, login } = useAuth();
   const location = useLocation();
 
   useEffect(() => {
+
+    //check authenticated status, redirect them to login if they aren't
+    if (!isAuthenticated) {
+      const queryParams = new URLSearchParams(window.location.search);
+      const token = queryParams.get('token');
+
+      if (token) {
+        login(token); // Assuming your login function is now adapted to accept the token as an argument
+        // Redirect to dashboard or another page as needed
+      }else {
+        console.log('user not authenticated (token not found) at /dashboard');
+      }
+
+    }
+    
+
+    console.log('auth: ' + isAuthenticated);
+
     const fetchUserInfo = async () => {
       try {
         const response = await fetch('/api/user');
@@ -44,10 +62,8 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <StickyNavbar />
-      <div className="container mx-auto mt-8">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <p className="text-lg">Welcome, {userEmail}</p>
-      </div>
     </>
   );
 };
