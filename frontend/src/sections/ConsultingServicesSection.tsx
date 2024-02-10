@@ -1,16 +1,15 @@
 import React from 'react'
 import { ServiceItem } from '../components/ServiceItem'
-import { FaCheckCircle } from 'react-icons/fa'
 import { GoGoal } from "react-icons/go";
 import { IoIosPeople } from "react-icons/io";
 
-export const SoftwareServicesSection = () => {
+export const ConsultingServicesSection = () => {
   return (
     <div className="flex flex-col align-baseline snap-center">
-      <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">Software <span className='text-emerald-700'>For You</span></h2>
-      <p className="text-gray-500 text-center mb-10">Empowering your Vision with customized software solutions crafted specifically for your unique needs.</p>
+      <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">BUILDING <span className='text-emerald-700'>YOUR FUTURE</span></h2>
+      <p className="text-gray-500 text-center mb-10">Prioritizing client relationships allow us to craft a future where your success is not just a goal but a shared venture.</p>
       <ServiceItem 
-        title="Let's Talk About Your Goals"
+        title="Blueprint for Success"
         description="We start with personalized conversations to grasp your unique business goals. This way, our software solutions are perfectly aligned with your vision for success."
         icon={<GoGoal size={20} />} 
       />

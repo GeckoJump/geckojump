@@ -17,7 +17,7 @@ export const HeroSection = () => {
   }
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col snap-start">
       <section className="flex flex-col justify-center bg-background text-white h-screen">
         <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
           <div className="flex flex-col justify-center mx-auto max-w-3xl w-full text-center">

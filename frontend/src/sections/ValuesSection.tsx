@@ -15,34 +15,34 @@ export const ServicesSection = () => {
   })
 
   return (
-    <div ref={ref}>
+    <div ref={ref} className='snap-center scroll-mt-16'>
       <div className={`flex flex-col justify-center align-middle duration-1000 ${inView ? 'transition-all opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-8'}`}>
-        <div className='text-center px-2'>
+        <div className='text-center px-2 mb-2'>
           <h2 className='text-4xl font-bold font-BebasNeue'>WHY <span className='text-emerald-700'>CHOOSE US</span></h2>
           <p className='text-gray-500 mb-4 mt-1 lg:w-2/5 md:w-4/5 mx-auto'>
             Our commitment to <span className="font-bold">you</span> extends beyond delivering premium software solutions. We are dedicated to building long-lasting, quality relationships with our clients.
           </p>
         </div>
-        <div className='grid md:grid-cols-2 sm:grid-cols-1 grid-rows-[1fr,1fr] items-stretch max-w-screen-sm mx-auto gap-8 gap-x-12'>
+        <div className='grid md:grid-cols-2 sm:grid-cols-1 grid-rows-[1fr,1fr] items-stretch max-w-screen-sm mx-auto gap-4 gap-x-12'>
           <ValueItem
             title='Quality Relationships'
             description='Our team is dedicated to building long-lasting, quality relationships with our clients.'
-            icon={<IoIosPeople className='text-5xl' />}
+            icon={<IoIosPeople className='text-4xl' />}
           />
           <ValueItem
             title='Tailored Service'
             description='We learn what makes your business unique in order to provide tailored solutions that will help you succeed.'
-            icon={<GoGoal className='text-5xl' />}
+            icon={<GoGoal className='text-4xl' />}
           />
           <ValueItem
             title='Expertise'
             description='Our team has the expertise to provide the best solutions for your business.'
-            icon={<IoIosConstruct className='text-5xl' />}
+            icon={<IoIosConstruct className='text-4xl' />}
           />
           <ValueItem
             title='Innovation'
             description='We are always looking for innovative ways to help your business succeed.'
-            icon={<RiLightbulbFlashFill className='text-5xl' />}
+            icon={<RiLightbulbFlashFill className='text-4xl' />}
           />
 
 
