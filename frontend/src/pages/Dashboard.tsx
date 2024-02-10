@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 import StickyNavbar from '../components/StickyNavbar';
+import AdminDashboard from '../components/AdminDashboard';
 
 const useUserInfo = () => {
   const [userEmail, setUserEmail] = useState<string>('');
@@ -63,6 +64,7 @@ const Dashboard: React.FC = () => {
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
         <p className="text-lg">Welcome, {userEmail}</p>
       </div>
+      <AdminDashboard/>
     </>
   );
 };
