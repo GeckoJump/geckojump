@@ -19,6 +19,7 @@ html, body {
     sans-serif;
   scroll-snap-type: y proximity;
   scroll-snap-stop: always;
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
