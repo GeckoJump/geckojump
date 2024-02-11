@@ -2,7 +2,7 @@ import React from 'react'
 
 export const ContactSection = () => {
   return (
-    <div className="flex flex-col items-center w-full justify-center py-12 bg-zinc-50 snap-center">
+    <div id="contact-section" className="flex flex-col items-center w-full justify-center py-12 bg-zinc-50 snap-center scroll-mt-20">
       <h2 className="text-4xl font-bold pb-2 text-center font-BebasNeue">Let's Get <span className="text-emerald-700">To Work</span></h2>
       <p className="text-gray-500 px-4 md:px-0 text-center mb-10">We would love to work with you. Leave us your contact information and we will be in touch as soon as possible. </p>
       <form className="flex flex-col w-3/4 lg:w-1/2 gap-4 justify-center">
