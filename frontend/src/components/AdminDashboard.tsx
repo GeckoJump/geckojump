@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import MyVerticallyCenteredModal from './Modal'; // Import your modal component
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 
 interface User {
   email: string;
@@ -10,16 +13,66 @@ interface UsersByRole {
   [role: string]: User[];
 }
 
+interface Project {
+  _id: string;
+  title: string;
+  description: string;
+}
+
+
+
+
 const AdminDashboard: React.FC = () => {
   const [users, setUsers] = useState<UsersByRole>({});
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [role, setRole] = useState('');
+
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [employees, setEmployees] = useState<User[]>([]);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [modalShow, setModalShow] = React.useState(false);
+
+
+
+
   const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     fetchUsers();
+    fetchProjects();
+    //fetchEmployees();
   }, []);
+
+
+  const fetchProjects = async () => {
+    try {
+      const response = await axios.get<Project[]>('/api/projects');
+      setProjects(response.data);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Failed to fetch projects');
+    }
+  };
+
+
+  const fetchEmployees = async () => {
+    try {
+      const response = await axios.get<User[]>('/api/users');
+      setEmployees(response.data);
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Failed to fetch employees');
+    }
+  };
+
+  const assignProject = (project: Project) => {
+    setSelectedProject(project);
+    fetchEmployees();
+    setModalShow(true);
+  };
+
+
 
   const fetchUsers = async () => {
     try {
@@ -58,6 +111,30 @@ const AdminDashboard: React.FC = () => {
       setErrorMessage('Failed to delete user');
     }
   };
+
+
+  const associateUserWithProject = async (email: string, projectId: string) => {
+    try {
+      await axios.post('/api/users/associate', { email, project_id: projectId });
+      // Refresh the user list after association
+      fetchUsers();
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Failed to associate user with project');
+    }
+  };
+
+  const disassociateUserWithProject = async (email: string, projectId: string) => {
+    try {
+      await axios.post('/api/users/disassociate', { email, project_id: projectId });
+      // Refresh the user list after disassociation
+      fetchUsers();
+    } catch (error) {
+      console.error(error);
+      setErrorMessage('Failed to disassociate user with project');
+    }
+  };
+
 
   return (
     <div className="container mx-auto mt-8 p-8 border border-gray-300 rounded-md">
@@ -107,7 +184,46 @@ const AdminDashboard: React.FC = () => {
           </div>
         ))}
       </div>
+
+    
+      <div className="container mx-auto mt-8 p-8 border border-gray-300 rounded-md">
+      <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
+      {errorMessage && <div className="text-red-500 mb-4">{errorMessage}</div>}
+      
+      <h2 className="text-xl font-semibold mb-2">All Projects</h2>
+      <div>
+        {projects.map((project) => (
+          <div key={project._id} className="mb-4 border border-gray-300 rounded-md p-4">
+            <h3 className="text-lg font-semibold mb-2">{project.title}</h3>
+            <p>{project.description}</p>
+            <button
+              className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+              onClick={() => assignProject(project)}
+            >
+              Assign
+            </button>
+          </div>
+        ))}
+      </div>
     </div>
+  
+    <MyVerticallyCenteredModal
+      show={modalShow}
+      onHide={() => setModalShow(false)}
+      project={selectedProject}
+      employees={employees}
+      associateUserWithProject={associateUserWithProject}
+      disassociateUserWithProject={disassociateUserWithProject}
+    />
+
+
+
+
+    </div>
+
+    
+
+
   );
 };
 

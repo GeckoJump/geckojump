@@ -24,6 +24,7 @@ const useUserInfo = () => {
           }
         }
       } catch (error) {
+        navigate('/');
         console.error('Error fetching user info:', error);
       }
     };
@@ -46,6 +47,8 @@ const useUserInfo = () => {
     if (accessToken) {
       localStorage.setItem('accessToken', accessToken);
       navigate('/dashboard');
+    } else {
+      navigate('/');
     }
 
     fetchUserInfo();

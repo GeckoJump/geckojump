@@ -1,5 +1,6 @@
+from pymongo.collection import Collection
+from pymongo.database import Database
 from flask import jsonify
-from models.project_model import Project
 from pymongo import MongoClient
 from bson import ObjectId
 
@@ -13,11 +14,6 @@ class ProjectController:
         project_id = str(result.inserted_id)
         return project_id
 
-    def get_project_by_id(self, project_id: str) -> Optional[Project]:
-        project = self.projects_collection.find_one({'_id': ObjectId(project_id)})
-        if project:
-            return Project(project['title'], project['description'], project['objectives'])
-        return None
 
     def update_project(self, project_id: str, title: str, description: str) -> bool:
         result = self.projects_collection.update_one(
@@ -29,6 +25,75 @@ class ProjectController:
     def delete_project(self, project_id: str) -> bool:
         result = self.projects_collection.delete_one({'_id': ObjectId(project_id)})
         return result.deleted_count > 0
+
+    def get_all_projects(self) -> list[dict]:
+        return list(self.projects_collection.find({}))
+
+
+
+
+
+
+
+    ##########################################################################################
+    ########################## PROJECT EMPLOYEE/CLIENT ASSOCIATION ###########################
+    ##########################################################################################
+
+
+    def get_associated_employees(self, project_id: str) -> list[dict]:
+        project = self.projects_collection.find_one({'_id': ObjectId(project_id)})
+        if project:
+            employees = project.get('employees', [])
+            return employees
+        else:
+            return []
+
+    def get_associated_clients(self, project_id: str) -> list[dict]:
+        project = self.projects_collection.find_one({'_id': ObjectId(project_id)})
+        if project:
+            clients = project.get('clients', [])
+            return clients
+        else:
+            return []
+
+    def add_employee_to_project(self, project_id: str, employee_id: str) -> bool:
+        result = self.projects_collection.update_one(
+            {'_id': ObjectId(project_id)},
+            {'$addToSet': {'employees': employee_id}}
+        )
+        return result.modified_count > 0
+
+    def remove_employee_from_project(self, project_id: str, employee_id: str) -> bool:
+        result = self.projects_collection.update_one(
+            {'_id': ObjectId(project_id)},
+            {'$pull': {'employees': employee_id}}
+        )
+        return result.modified_count > 0
+
+    def add_client_to_project(self, project_id: str, client_id: str) -> bool:
+        result = self.projects_collection.update_one(
+            {'_id': ObjectId(project_id)},
+            {'$addToSet': {'clients': client_id}}
+        )
+        return result.modified_count > 0
+
+    def remove_client_from_project(self, project_id: str, client_id: str) -> bool:
+        result = self.projects_collection.update_one(
+            {'_id': ObjectId(project_id)},
+            {'$pull': {'clients': client_id}}
+        )
+        return result.modified_count > 0
+
+
+
+
+
+
+
+    ##########################################################################################
+    ################################ PROJECT OBJECTIVES ######################################
+    ##########################################################################################
+
 
     def add_objective(self, project_id: str, title: str, description: str, time_to_completion: int) -> bool:
         objective_id = ObjectId()

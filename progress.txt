@@ -1,26 +1,9 @@
-created UserController to access the database directly, making api endpoints easier to create.
-created login_required decorator preventing unauthorized users from making specific api calls
+created admin dashboard
+    - add ability for admins to create/delete projects and assign them to employees and clients
 
-need to test api somehow (api authorization needs oauth token)
-connect frontend to api so admin can create new employees and clients   
-    - how do I create an admin account though? (chicken/egg)
+employee dashboard
+    - fix this
+    - add ability to update projects/add objectives
 
-create a Project object, and make it to where:
-
-- employees can create projects and associate client users to them
-- employees can edit/add to projects
-- clients can view their project(s) and see the progress
-
-
-
-make admin panel where admins can:
-
-- create employees
-- create clients
-
-
-
-
-for each feature, figure out:
-- what api endpoints need to be made?
-- how can I connect each of these endpoints to different react pages?
+create client dashboard
+    - add ability for clients to see the progress of the project(s) that are associated to them

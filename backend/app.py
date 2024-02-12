@@ -135,8 +135,12 @@ def login_required(roles):
 
 
 
-from controllers.UserController import UserController  # Import the UserController
+from controllers.UserController import UserController 
 
+from controllers.ProjectController import ProjectController
+
+# allows the endpoints entry into the database
+project_controller = ProjectController(db)
 
 # allows the endpoints entry into the database
 user_controller = UserController(db)
@@ -189,7 +193,6 @@ def delete_user(email):
         return jsonify({'error': 'User not found'}), 404
 
 
-
 @app.route('/api/users/roles', methods=['GET'])
 @login_required(roles=['admin'])  # Only admins can get users by roles
 def get_users_by_roles():
@@ -201,50 +204,95 @@ def get_users_by_roles():
 
 
 
-@app.route('/api/users/associate', methods=['POST'])
-@login_required(roles=['employee'])
-def associate_user_with_project():
+
+
+
+
+
+
+
+
+
+
+
+
+##########################################################################################
+########################## PROJECT EMPLOYEE/CLIENT ASSOCIATION ###########################
+##########################################################################################
+
+##### ADD EMPLOYEE TO PROJECT #####
+@app.route('/api/projects/add_employee', methods=['POST'])
+def add_employee_to_project():
     data = request.json
-    email = data.get('email')
     project_id = data.get('project_id')
-    if not email or not project_id:
-        return jsonify({'error': 'Email and project_id are required'}), 400
-    user = user_controller.get_user_by_email(email)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    # Add the project_id to the user's associated_projects list
-    user_controller.add_project_association(email, project_id)
-    return jsonify({'message': 'Project associated with user successfully'}), 201
+    employee_email = data.get('employee_email')
+    if not project_id or not employee_email:
+        return jsonify({'error': 'Project ID and employee email are required'}), 400
+    employee = user_controller.get_user_by_email(employee_email)
+    if not employee:
+        return jsonify({'error': 'Employee not found'}), 404
+    project_controller.add_employee_to_project(project_id, employee['_id'])
+    return jsonify({'message': 'Employee added to project successfully'}), 200
 
-@app.route('/api/users/disassociate', methods=['POST'])
-@login_required(roles=['employee'])
-def disassociate_user_with_project():
+
+##### REMOVE EMPLOYEE FROM PROJECT #####
+@app.route('/api/projects/remove_employee', methods=['POST'])
+def remove_employee_from_project():
     data = request.json
-    email = data.get('email')
     project_id = data.get('project_id')
-    if not email or not project_id:
-        return jsonify({'error': 'Email and project_id are required'}), 400
-    user = user_controller.get_user_by_email(email)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    # Remove the project_id from the user's associated_projects list
-    user_controller.remove_project_association(email, project_id)
-    return jsonify({'message': 'Project disassociated from user successfully'}), 200
+    employee_email = data.get('employee_email')
+    if not project_id or not employee_email:
+        return jsonify({'error': 'Project ID and employee email are required'}), 400
+    employee = user_controller.get_user_by_email(employee_email)
+    if not employee:
+        return jsonify({'error': 'Employee not found'}), 404
+    project_controller.remove_employee_from_project(project_id, employee['_id'])
+    return jsonify({'message': 'Employee removed from project successfully'}), 200
+
+
+##### ADD CLIENT TO PROJECT #####
+@app.route('/api/projects/add_client', methods=['POST'])
+def add_client_to_project():
+    data = request.json
+    project_id = data.get('project_id')
+    client_email = data.get('client_email')
+    if not project_id or not client_email:
+        return jsonify({'error': 'Project ID and client email are required'}), 400
+    client = user_controller.get_user_by_email(client_email)
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+    project_controller.add_client_to_project(project_id, client['_id'])
+    return jsonify({'message': 'Client added to project successfully'}), 200
+
+
+##### REMOVE CLIENT FROM PROJECT #####
+@app.route('/api/projects/remove_client', methods=['POST'])
+def remove_client_from_project():
+    data = request.json
+    project_id = data.get('project_id')
+    client_email = data.get('client_email')
+    if not project_id or not client_email:
+        return jsonify({'error': 'Project ID and client email are required'}), 400
+    client = user_controller.get_user_by_email(client_email)
+    if not client:
+        return jsonify({'error': 'Client not found'}), 404
+    project_controller.remove_client_from_project(project_id, client['_id'])
+    return jsonify({'message': 'Client removed from project successfully'}), 200
 
 
 
 
 
 
-from controllers.ProjectController import ProjectController  # Import the UserController
 
 
-# allows the endpoints entry into the database
-project_controller = ProjectController(db)
 
 
+
+
+###### CREATE NEW PROJECT ######
 @app.route('/api/projects', methods=['POST'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee','admin'])
 def create_project():
     data = request.json
     title = data.get('title')
@@ -254,6 +302,15 @@ def create_project():
     project_id = project_controller.create_project(title, description)
     return jsonify({'message': 'Project created successfully', 'project_id': project_id}), 201
 
+##### RETURN ALL PROJECTS #####
+@app.route('/api/projects', methods=['GET'])
+@login_required(roles=['employee', 'admin'])
+def get_projects():
+    projects = project_controller.get_all_projects() 
+    return jsonify(projects), 200
+
+
+##### RETURN SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['GET'])
 @login_required(roles=['employee', 'client'])
 def get_project(project_id):
@@ -262,6 +319,8 @@ def get_project(project_id):
         return jsonify({'error': 'Project not found'}), 404
     return jsonify(project.to_dict())
 
+
+##### UPDATE SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['PUT'])
 @login_required(roles=['employee'])
 def update_project(project_id):
@@ -274,6 +333,8 @@ def update_project(project_id):
         return jsonify({'message': 'Project updated successfully'}), 200
     return jsonify({'error': 'Failed to update project'}), 500
 
+
+##### DELETE SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['DELETE'])
 @login_required(roles=['employee'])
 def delete_project(project_id):
@@ -281,6 +342,9 @@ def delete_project(project_id):
         return jsonify({'message': 'Project deleted successfully'}), 200
     return jsonify({'error': 'Failed to delete project'}), 500
 
+
+
+##### ADD OBJECTIVE TO PROJECT
 @app.route('/api/projects/<project_id>/objectives', methods=['POST'])
 @login_required(roles=['employee'])
 def add_objective(project_id):
@@ -294,6 +358,9 @@ def add_objective(project_id):
         return jsonify({'message': 'Objective added successfully'}), 201
     return jsonify({'error': 'Failed to add objective'}), 500
 
+
+
+##### UPDATE SPECIFIC OBJECTIVE FOR PROJECT #####
 @app.route('/api/projects/<project_id>/objectives/<objective_id>', methods=['PUT'])
 @login_required(roles=['employee'])
 def edit_objective(project_id, objective_id):
@@ -307,13 +374,15 @@ def edit_objective(project_id, objective_id):
         return jsonify({'message': 'Objective edited successfully'}), 200
     return jsonify({'error': 'Failed to edit objective'}), 500
 
+
+
+##### DELETE SPECIFIC OBJECTIVE FOR PROJECT #####
 @app.route('/api/projects/<project_id>/objectives/<objective_id>', methods=['DELETE'])
 @login_required(roles=['employee'])
 def delete_objective(project_id, objective_id):
     if project_controller.delete_objective(project_id, objective_id):
         return jsonify({'message': 'Objective deleted successfully'}), 200
     return jsonify({'error': 'Failed to delete objective'}), 500
-
 
 
 

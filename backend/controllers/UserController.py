@@ -36,6 +36,13 @@ class UserController:
             users_by_role[role].append(user)
         return users_by_role
 
+    def get_associated_projects(self, email: str) -> List[str]:
+        user = self.users.find_one({'email': email})
+        if user:
+            return user.get('associated_projects', [])
+        else:
+            return []
+
     def add_project_association(self, email: str, project_id: str) -> None:
         self.users.update_one({'email': email}, {'$push': {'associated_projects': project_id}})
 
