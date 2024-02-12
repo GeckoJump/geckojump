@@ -22,7 +22,7 @@ export const ServicesSection = () => {
             Our commitment to <span className="font-bold">you</span> extends beyond delivering premium software solutions. We are dedicated to building long-lasting, quality relationships with our clients.
           </p>
         </div>
-        <div className='grid md:grid-cols-2 sm:grid-cols-1 grid-rows-[1fr,1fr] items-stretch max-w-screen-sm mx-auto gap-4 gap-x-12'>
+        <div className='grid md:grid-cols-2 sm:grid-cols-1 grid-rows-[1fr,1fr] items-stretch max-w-screen-sm mx-auto gap-4 gap-x-8'>
           <ValueItem
             title='Quality Relationships'
             description='Our team is dedicated to building long-lasting, quality relationships with our clients.'
