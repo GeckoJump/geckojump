@@ -6,6 +6,7 @@ import { useAuth } from '../AuthProvider';
 import logo from '../logo.png'
 import { Twirl } from 'hamburger-react';
 import { Link } from 'react-router-dom';
+import { StyledLink } from './StyledLink';
 
 const StickyNavbar: React.FC = () => {
   const { isAuthenticated, logout } = useAuth();
@@ -20,7 +21,7 @@ const StickyNavbar: React.FC = () => {
   }, [isNavOpen]);
 
   // Define the classes for links
-  const NavLinkClasses = "text-zinc-300 font-semibold text-sm font p-3 transition-all duration-150 ease-in hover:font-bold"
+  const NavLinkClasses = "text-zinc-300 font-semibold text-sm p-3 transition-all duration-150 ease-in"
 
   return (
     <nav className={`fixed flex transition-all duration-150 ${isNavOpen ? 'h-full [body]:overflow-y-hidden' : ''} justify-center w-full z-[999] bg-background bg-opacity-100 left-1/2 -translate-x-1/2 shadow-xl`}>
@@ -55,7 +56,7 @@ const StickyNavbar: React.FC = () => {
               <ScrollLink to="contact-section" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Contact</ScrollLink>
               {isAuthenticated ? 
                 <button onClick={logout} className={NavLinkClasses}>Logout</button> :
-                <Link to="/login" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Login</Link>}
+                <StyledLink to="/login" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Login</StyledLink>}
         </div>
       </div>
       </div>
