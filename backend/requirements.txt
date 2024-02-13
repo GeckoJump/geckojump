@@ -4,3 +4,4 @@ flask-restful
 Authlib
 requests
 pyjwt
+sendgrid
