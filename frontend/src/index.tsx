@@ -3,13 +3,20 @@ import ReactDOM from 'react-dom/client';
 import './css/index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { GoogleReCaptchaProvider } from 'react-google-recaptcha-v3';
+import constants from './constants';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <GoogleReCaptchaProvider 
+      reCaptchaKey={constants.RECAPTCHA_KEY}
+      useEnterprise={true}
+    >
+      <App />
+    </GoogleReCaptchaProvider>
   </React.StrictMode>
 );
 

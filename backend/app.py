@@ -1,3 +1,4 @@
+from utils.recaptcha_protect import recaptcha_protect
 from mail.mailer import on_contact_form_submit
 from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect
 from flask_cors import CORS
@@ -92,6 +93,7 @@ def auth():
         return jsonify({'error': 'Token validation failed'}), 401
     
 @app.route('/api/contact', methods=['POST'])
+@recaptcha_protect
 def contact():
     fields = ['email', 'name', 'message', 'company', 'phone']
     data = request.get_json()
