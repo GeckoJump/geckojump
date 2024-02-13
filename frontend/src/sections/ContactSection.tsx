@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { FaPaperPlane } from 'react-icons/fa';
 import { GoPaperAirplane } from 'react-icons/go';
 import { IoIosAirplane, IoMdPaperPlane } from 'react-icons/io';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 
 export const ContactSection = () => {
   const [name, setName] = React.useState('');
@@ -12,14 +13,23 @@ export const ContactSection = () => {
 
   const [isSubmitting, setIsSubmitting] = React.useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const { executeRecaptcha } = useGoogleReCaptcha();
+
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log({ name, email, phone, company, message });
+    if (!executeRecaptcha) {
+      console.log('reCaptcha not loaded');
+      return;
+    }
 
     if (!name || !email || !phone || !company || !message) {
       alert('Please fill out all fields');
       return;
     }
+
+    const token = await executeRecaptcha("contact");
+
+    console.log('token', token);
 
     setIsSubmitting(true);
 
@@ -42,7 +52,9 @@ export const ContactSection = () => {
       }
       setIsSubmitting(false);
     });
-  }
+
+    // setrecaptchaRefresh(r => !r);
+  }, [executeRecaptcha, name, email, phone, company, message]);
 
 
   return (
