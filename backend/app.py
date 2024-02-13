@@ -1,3 +1,4 @@
+from mail.mailer import on_contact_form_submit
 from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect
 from flask_cors import CORS
 import requests
@@ -89,6 +90,22 @@ def auth():
         # Token validation failed
         print(e)
         return jsonify({'error': 'Token validation failed'}), 401
+    
+@app.route('/api/contact', methods=['POST'])
+def contact():
+    fields = ['email', 'name', 'message', 'company', 'phone']
+    data = request.get_json()
+
+    # Check if all required fields are present
+    for field in fields:
+        if field not in data:
+            return jsonify({'error': f'{field} is required'}), 400
+    
+    email, name, message, company, phone = data['email'], data['name'], data['message'], data['company'], data['phone']
+
+    # Send an email to the user
+    on_contact_form_submit(email, name, message, company, phone)
+    return jsonify({'message': 'Contact form submitted'}), 200
     
 
 from flask import session, jsonify
