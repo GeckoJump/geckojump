@@ -1,6 +1,6 @@
 from utils.recaptcha_protect import recaptcha_protect
 from mail.mailer import on_contact_form_submit
-from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect
+from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect, current_app
 from flask_cors import CORS
 import requests
 from flask_restful import Resource, Api
@@ -10,28 +10,28 @@ from jwt import PyJWKClient
 import os
 
 app = Flask(__name__)
+app.config.from_object('config.Config')
 
 api = Api(app)
 CORS(app)
 
-app.secret_key = os.environ.get('FLASK_SECRET_KEY')
-
 oauth = OAuth(app)
-oauth.register(
-    name='google',
-    client_id= os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret= os.environ.get('GOOGLE_CLIENT_SECRET'),
-    #authorize_url='https://accounts.google.com/o/oauth2/auth',
-    #authorize_params={},
-    #access_token_url='https://accounts.google.com/o/oauth2/token',
-    #access_token_params=None,
-    #access_token_method='POST',
-    #refresh_token_url=None,
-    #refresh_token_params=None,
-    redirect_uri='http://localhost:5000/auth',
-    client_kwargs={'scope': 'openid email profile'},
-    server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
-)
+with app.app_context():
+  oauth.register(
+      name='google',
+      client_id=current_app.config['GOOGLE_CLIENT_ID'],
+      client_secret=current_app.config['GOOGLE_CLIENT_SECRET'],
+      #authorize_url='https://accounts.google.com/o/oauth2/auth',
+      #authorize_params={},
+      #access_token_url='https://accounts.google.com/o/oauth2/token',
+      #access_token_params=None,
+      #access_token_method='POST',
+      #refresh_token_url=None,
+      #refresh_token_params=None,
+      redirect_uri='http://localhost:5000/auth',
+      client_kwargs={'scope': 'openid email profile'},
+      server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
+  )
 
 
 # # Serve the React frontend

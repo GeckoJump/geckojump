@@ -6,3 +6,4 @@ requests
 pyjwt
 sendgrid
 google-cloud-recaptcha-enterprise
+gunicorn
