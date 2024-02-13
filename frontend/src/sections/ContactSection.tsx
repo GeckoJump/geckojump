@@ -29,16 +29,26 @@ export const ContactSection = () => {
 
     const token = await executeRecaptcha("contact");
 
-    console.log('token', token);
-
     setIsSubmitting(true);
+
+    const request_body = {
+      name,
+      email,
+      phone,
+      company,
+      message,
+      'token': token,
+      'action': 'contact'
+    };
+
+    console.log(request_body);
 
     fetch('/api/contact', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ name, email, phone, company, message }),
+      body: JSON.stringify(request_body),
     }).then((res) => {
       if (res.ok) {
         alert('Thank you for your message. We will be in touch soon.');
