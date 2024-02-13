@@ -10,7 +10,11 @@ from pymongo.server_api import ServerApi
 from jwt import PyJWKClient
 import os
 from functools import wraps
-
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
+import pathlib
 
 #initialize flask stuff
 app = Flask(__name__)
@@ -20,72 +24,84 @@ app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 api = Api(app)
 CORS(app)
 
-
+os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
 
 #initialize mongoDB stuff 
 client = MongoClient(os.environ.get('MONGO_URI'),server_api=ServerApi('1'))
 db = client.flask_db
+client_secrets_file = os.path.join(pathlib.Path(__file__).parent, "client_secret.json")
+
+GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
 
 
-
-#initialize oauth stuff
-oauth = OAuth(app)
-oauth.register(
-    name='google',
-    client_id= os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret= os.environ.get('GOOGLE_CLIENT_SECRET'),
-    #authorize_url='https://accounts.google.com/o/oauth2/auth',
-    #authorize_params={},
-    #access_token_url='https://accounts.google.com/o/oauth2/token',
-    #access_token_params=None,
-    #access_token_method='POST',
-    #refresh_token_url=None,
-    #refresh_token_params=None,
-    redirect_uri='http://localhost:5000/auth',
-    client_kwargs={'scope': 'openid email profile'},
-    server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
+flow = Flow.from_client_secrets_file(
+    client_secrets_file=client_secrets_file,
+    scopes=["https://www.googleapis.com/auth/userinfo.profile", "https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri="http://localhost:5000/api/auth"
 )
+
+
+# #initialize oauth stuff
+# oauth = OAuth(app)
+# oauth.register(
+#     name='google',
+#     client_id= os.environ.get('GOOGLE_CLIENT_ID'),
+#     client_secret= os.environ.get('GOOGLE_CLIENT_SECRET'),
+#     #authorize_url='https://accounts.google.com/o/oauth2/auth',
+#     #authorize_params={},
+#     #access_token_url='https://accounts.google.com/o/oauth2/token',
+#     #access_token_params=None,
+#     #access_token_method='POST',
+#     #refresh_token_url=None,
+#     #refresh_token_params=None,
+#     redirect_uri='http://localhost:5000/auth',
+#     client_kwargs={'scope': 'openid email profile'},
+#     server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
+# )
 
 
 
 @app.route('/api/login')
 def login():
-    redirect_uri = 'http://localhost:5000/api/auth'
-    return oauth.google.authorize_redirect(redirect_uri)
+    authorization_url, state = flow.authorization_url()
+    print(authorization_url)
+    session["state"] = state
+    return redirect(authorization_url)
 
 @app.route('/api/auth')
 def auth():
-    token = oauth.google.authorize_access_token()
-    
-    # Google's JWKs endpoint
-    GOOGLE_JWKS_URL = 'https://www.googleapis.com/oauth2/v3/certs'
-    
-    # Initialize JWK client with the URL
-    jwk_client = PyJWKClient(GOOGLE_JWKS_URL)
-    
-    try:
-        # Get the signing key from the JWK client
-        signing_key = jwk_client.get_signing_key_from_jwt(token['id_token'])
-        
-        # Decode and verify the JWT
-        payload = jwt.decode(
-            token['id_token'],
-            signing_key.key,
-            algorithms=["RS256"],
-            audience=oauth.google.client_id  # Ensure this matches your Google client ID
+    try: 
+        flow.fetch_token(authorization_response=request.url)
+
+        if not session["state"] == request.args["state"]:
+            print('state not found')
+            abort(500)  # State does not match!
+
+        credentials = flow.credentials
+        request_session = requests.session()
+        cached_session = cachecontrol.CacheControl(request_session)
+        token_request = google.auth.transport.requests.Request(session=cached_session)
+
+        id_info = id_token.verify_oauth2_token(
+            id_token=credentials._id_token,
+            request=token_request,
+            audience=GOOGLE_CLIENT_ID,
+            clock_skew_in_seconds=10,
         )
-        
-        #process payload if authentication is successful
-        email = payload.get('email')
+
+        session["google_id"] = id_info.get("sub")
+        token = id_info.get("sub")
+        session["name"] = id_info.get("name")
+        email = id_info.get("email")
         print(email)
         #look for user in database
         user = db.users.find_one({'email': email})
-
+        print(credentials.token)
         if user:
             #found user in db
             user_role = user.get('role')
-            session['user'] = {'email': email, 'role': user_role}
-            frontend_redirect_url = f"http://localhost:3000/dashboard?token={token['access_token']}"
+            session['user'] = {'email': email, 'name': session["name"], 'role': user_role}
+            frontend_redirect_url = f"http://localhost:3000/dashboard?token={credentials.token}"
             return redirect(frontend_redirect_url)
         else:
             #did not find user in db
@@ -98,7 +114,7 @@ def auth():
     
 
 
-@app.route('/api/user')
+@app.route('/api/user', methods=['GET'])
 def get_user_info():
     user_info = session.get('user')
     if user_info:
@@ -220,73 +236,39 @@ def get_users_by_roles():
 ########################## PROJECT EMPLOYEE/CLIENT ASSOCIATION ###########################
 ##########################################################################################
 
-##### ADD EMPLOYEE TO PROJECT #####
-@app.route('/api/projects/add_employee', methods=['POST'])
-def add_employee_to_project():
+##### ADD USER TO PROJECT #####
+
+@app.route('/api/projects/add_user', methods=['POST'])
+def add_user_to_project():
     data = request.json
     project_id = data.get('project_id')
-    employee_email = data.get('employee_email')
-    if not project_id or not employee_email:
-        return jsonify({'error': 'Project ID and employee email are required'}), 400
-    employee = user_controller.get_user_by_email(employee_email)
-    if not employee:
-        return jsonify({'error': 'Employee not found'}), 404
-    project_controller.add_employee_to_project(project_id, employee['_id'])
-    return jsonify({'message': 'Employee added to project successfully'}), 200
+    email = data.get('email')
+    if not project_id or not email:
+        return jsonify({'error': 'Project ID and user email are required'}), 400
+    found_user = user_controller.get_user_by_email(email)
+    if not found_user:
+        return jsonify({'error': 'User not found'}), 404
+    project_controller.add_user_to_project(project_id, found_user['_id'])
+    return jsonify({'message': 'User added to project successfully'}), 200
 
-
-##### REMOVE EMPLOYEE FROM PROJECT #####
-@app.route('/api/projects/remove_employee', methods=['POST'])
-def remove_employee_from_project():
+##### REMOVE USER FROM PROJECT #####
+@app.route('/api/projects/remove_user', methods=['POST'])
+def remove_user_from_project():
     data = request.json
     project_id = data.get('project_id')
-    employee_email = data.get('employee_email')
-    if not project_id or not employee_email:
-        return jsonify({'error': 'Project ID and employee email are required'}), 400
-    employee = user_controller.get_user_by_email(employee_email)
-    if not employee:
-        return jsonify({'error': 'Employee not found'}), 404
-    project_controller.remove_employee_from_project(project_id, employee['_id'])
-    return jsonify({'message': 'Employee removed from project successfully'}), 200
-
-
-##### ADD CLIENT TO PROJECT #####
-@app.route('/api/projects/add_client', methods=['POST'])
-def add_client_to_project():
-    data = request.json
-    project_id = data.get('project_id')
-    client_email = data.get('client_email')
-    if not project_id or not client_email:
-        return jsonify({'error': 'Project ID and client email are required'}), 400
-    client = user_controller.get_user_by_email(client_email)
-    if not client:
-        return jsonify({'error': 'Client not found'}), 404
-    project_controller.add_client_to_project(project_id, client['_id'])
-    return jsonify({'message': 'Client added to project successfully'}), 200
-
-
-##### REMOVE CLIENT FROM PROJECT #####
-@app.route('/api/projects/remove_client', methods=['POST'])
-def remove_client_from_project():
-    data = request.json
-    project_id = data.get('project_id')
-    client_email = data.get('client_email')
-    if not project_id or not client_email:
-        return jsonify({'error': 'Project ID and client email are required'}), 400
-    client = user_controller.get_user_by_email(client_email)
-    if not client:
-        return jsonify({'error': 'Client not found'}), 404
-    project_controller.remove_client_from_project(project_id, client['_id'])
-    return jsonify({'message': 'Client removed from project successfully'}), 200
+    email = data.get('email')
+    if not project_id or not email:
+        return jsonify({'error': 'Project ID and user email are required'}), 400
+    found_user = user_controller.get_user_by_email(email)
+    if not found_user:
+        return jsonify({'error': 'User not found'}), 404
+    project_controller.remove_user_from_project(project_id, found_user['_id'])
+    return jsonify({'message': 'User removed from project successfully'}), 200
 
 
 
 
-
-
-
-
-
+print(project_controller.get_user_by_id('65c7c2d1adadf614ee036eae'))
 
 
 
@@ -307,6 +289,7 @@ def create_project():
 @login_required(roles=['employee', 'admin'])
 def get_projects():
     projects = project_controller.get_all_projects() 
+    print(type(projects))
     return jsonify(projects), 200
 
 
@@ -383,6 +366,8 @@ def delete_objective(project_id, objective_id):
     if project_controller.delete_objective(project_id, objective_id):
         return jsonify({'message': 'Objective deleted successfully'}), 200
     return jsonify({'error': 'Failed to delete objective'}), 500
+
+
 
 
 

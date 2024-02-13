@@ -5,3 +5,6 @@ Authlib
 requests
 pyjwt
 pymongo
+google-auth
+requests-oauthlib
+google-auth-oauthlib

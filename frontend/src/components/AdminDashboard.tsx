@@ -6,7 +6,8 @@ import Modal from 'react-bootstrap/Modal';
 
 interface User {
   email: string;
-  fullName: string;
+  full_name: string;
+  role: string;
 }
 
 interface UsersByRole {
@@ -17,7 +18,10 @@ interface Project {
   _id: string;
   title: string;
   description: string;
+  clients: string[];
+  employees: string[];
 }
+
 
 
 
@@ -29,7 +33,6 @@ const AdminDashboard: React.FC = () => {
   const [role, setRole] = useState('');
 
   const [projects, setProjects] = useState<Project[]>([]);
-  const [employees, setEmployees] = useState<User[]>([]);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [modalShow, setModalShow] = React.useState(false);
 
@@ -41,13 +44,14 @@ const AdminDashboard: React.FC = () => {
   useEffect(() => {
     fetchUsers();
     fetchProjects();
-    //fetchEmployees();
   }, []);
 
 
   const fetchProjects = async () => {
     try {
       const response = await axios.get<Project[]>('/api/projects');
+      console.log('response: ',response)
+      const projectsArray = response.data
       setProjects(response.data);
     } catch (error) {
       console.error(error);
@@ -56,22 +60,17 @@ const AdminDashboard: React.FC = () => {
   };
 
 
-  const fetchEmployees = async () => {
+
+  const assignProject = async (project: Project) => {
+    setSelectedProject(project);
     try {
-      const response = await axios.get<User[]>('/api/users');
-      setEmployees(response.data);
+      await fetchUsers();
+      setModalShow(true);
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to fetch employees');
     }
   };
-
-  const assignProject = (project: Project) => {
-    setSelectedProject(project);
-    fetchEmployees();
-    setModalShow(true);
-  };
-
 
 
   const fetchUsers = async () => {
@@ -113,27 +112,31 @@ const AdminDashboard: React.FC = () => {
   };
 
 
+
+
   const associateUserWithProject = async (email: string, projectId: string) => {
     try {
-      await axios.post('/api/users/associate', { email, project_id: projectId });
-      // Refresh the user list after association
+      await axios.post('/api/projects/add_user', { project_id: projectId, email });
       fetchUsers();
+      fetchProjects();
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to associate user with project');
     }
-  };
+  }
 
   const disassociateUserWithProject = async (email: string, projectId: string) => {
     try {
-      await axios.post('/api/users/disassociate', { email, project_id: projectId });
-      // Refresh the user list after disassociation
+      await axios.post('/api/projects/remove_user', { email, project_id: projectId });
       fetchUsers();
+      fetchProjects();
     } catch (error) {
       console.error(error);
       setErrorMessage('Failed to disassociate user with project');
     }
   };
+
+
 
 
   return (
@@ -172,7 +175,7 @@ const AdminDashboard: React.FC = () => {
             <ul>
               {userList.map((user) => (
                 <li key={user.email}>
-                  {user.email} - {user.fullName}
+                  {user.email} - {user.full_name}
                   <button 
                     className="ml-2 bg-red-500 text-white px-2 py-1 rounded-md hover:bg-red-600"
                     onClick={() => deleteUser(user.email)}>
@@ -211,9 +214,10 @@ const AdminDashboard: React.FC = () => {
       show={modalShow}
       onHide={() => setModalShow(false)}
       project={selectedProject}
-      employees={employees}
+      users={users}
       associateUserWithProject={associateUserWithProject}
       disassociateUserWithProject={disassociateUserWithProject}
+
     />
 
 

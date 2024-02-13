@@ -4,70 +4,40 @@ import { useAuth } from '../AuthProvider';
 import StickyNavbar from '../components/StickyNavbar';
 import AdminDashboard from '../components/AdminDashboard';
 
-const useUserInfo = () => {
-  const [userEmail, setUserEmail] = useState<string>('');
-  const { isAuthenticated, login } = useAuth();
+const Dashboard: React.FC = () => {
+  const { userEmail, userName, userRole, isAuthenticated, login } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUserInfo = async () => {
-      try {
-        // Fetch user info only if authenticated
-        if (isAuthenticated) {
-          const response = await fetch('/api/user');
-          const data = await response.json();
-          if (response.ok) {
-            setUserEmail(data.email);
-          } else {
-            console.error('Failed to fetch user info:', data.error);
-          }
-        }
-      } catch (error) {
-        navigate('/');
-        console.error('Error fetching user info:', error);
-      }
-    };
+    
+    const queryParams = new URLSearchParams(location.search);
+    const token = queryParams.get('token');
 
-    // Redirect if not authenticated or token present in URL
-    if (!isAuthenticated) {
-      const queryParams = new URLSearchParams(window.location.search);
-      const token = queryParams.get('token');
-      if (token) {
-        login(token);
-        navigate('/dashboard');
+
+    if (!isAuthenticated) { //check if user is authenticated
+      if (!token) { //if they aren't, then do they have a token from being redirected from /api/auth? no?
+        console.log('user not authenticated and no token found (Dashboard useEffect)')
+        navigate('/') //go back to homepage
       } else {
-        console.log('User not authenticated (token not found) at /dashboard');
-        navigate('/');
+        login(token) //a token was passed in, so try to log in with it
       }
-    }
-
-    // Check if accessToken is present in URL and store it in localStorage
-    const accessToken = new URLSearchParams(location.search).get('token');
-    if (accessToken) {
-      localStorage.setItem('accessToken', accessToken);
-      navigate('/dashboard');
     } else {
-      navigate('/');
+      navigate('/dashboard') //we do this to reload the page and get rid of the token from the url
     }
+  }, [location.search, navigate, login]); //do the stuff above if any of these dependencies change
 
-    fetchUserInfo();
-  }, [isAuthenticated, login, location.search, navigate]);
-
-  return userEmail;
-};
-
-const Dashboard: React.FC = () => {
-  const userEmail = useUserInfo();
 
   return (
     <>
       <StickyNavbar />
       <div className="pt-16 mx-auto">
         <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-        <p className="text-lg">Welcome, {userEmail}</p>
+        <p className="text-lg">Welcome, {userName}</p>
+        <p className="text-lg">Email: {userEmail}</p>
+        <p className="text-lg">Role: {userRole}</p>
+        {userRole === 'admin' && <AdminDashboard />}
       </div>
-      <AdminDashboard/>
     </>
   );
 };

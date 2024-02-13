@@ -3,13 +3,14 @@ from pymongo.database import Database
 from flask import jsonify
 from pymongo import MongoClient
 from bson import ObjectId
+import json
 
 class ProjectController:
     def __init__(self, db: Database):
         self.projects_collection: Collection = db.projects
-
+        self.db = db
     def create_project(self, title: str, description: str) -> str:
-        project_data = {'title': title, 'description': description, 'objectives': []}
+        project_data = {'title': title, 'description': description, 'objectives': [], 'clients': [], 'employees': []}
         result = self.projects_collection.insert_one(project_data)
         project_id = str(result.inserted_id)
         return project_id
@@ -27,17 +28,26 @@ class ProjectController:
         return result.deleted_count > 0
 
     def get_all_projects(self) -> list[dict]:
-        return list(self.projects_collection.find({}))
+        projects = list(self.projects_collection.find({}))
+        # Convert ObjectId fields to strings
+        for project in projects:
+            project['_id'] = str(project['_id'])
+        return projects
+
+    def get_user_by_id(self, user_id: str) -> dict:
+        user = self.db.users.find_one({'_id': ObjectId(user_id)})
+        if user:
+            return json.dumps(user, default=str)
+        else:
+            return {}
 
 
 
 
 
-
-
-    ##########################################################################################
-    ########################## PROJECT EMPLOYEE/CLIENT ASSOCIATION ###########################
-    ##########################################################################################
+##########################################################################################
+########################## PROJECT EMPLOYEE/CLIENT ASSOCIATION ###########################
+##########################################################################################
 
 
     def get_associated_employees(self, project_id: str) -> list[dict]:
@@ -56,35 +66,39 @@ class ProjectController:
         else:
             return []
 
-    def add_employee_to_project(self, project_id: str, employee_id: str) -> bool:
-        result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
-            {'$addToSet': {'employees': employee_id}}
-        )
-        return result.modified_count > 0
-
-    def remove_employee_from_project(self, project_id: str, employee_id: str) -> bool:
-        result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
-            {'$pull': {'employees': employee_id}}
-        )
-        return result.modified_count > 0
-
-    def add_client_to_project(self, project_id: str, client_id: str) -> bool:
-        result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
-            {'$addToSet': {'clients': client_id}}
-        )
-        return result.modified_count > 0
-
-    def remove_client_from_project(self, project_id: str, client_id: str) -> bool:
-        result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
-            {'$pull': {'clients': client_id}}
-        )
-        return result.modified_count > 0
+    def add_user_to_project(self, project_id: str, user_id: str) -> bool:
+        found_user = json.loads(self.get_user_by_id(user_id))
+        print(found_user)
+        if found_user['role'] == 'employee':
+            result = self.projects_collection.update_one(
+                {'_id': ObjectId(project_id)},
+                {'$addToSet': {'employees': user_id}}
+            )
+            return result.modified_count > 0
+        elif found_user['role'] == 'client':
+            result = self.projects_collection.update_one(
+                {'_id': ObjectId(project_id)},
+                {'$addToSet': {'clients': user_id}}
+            )
+            return result.modified_count > 0
+        return False
 
 
+    def remove_user_from_project(self, project_id: str, user_id: str) -> bool:
+        found_user = json.loads(self.get_user_by_id(user_id))
+        if found_user['role'] == 'employee':
+            result = self.projects_collection.update_one(
+                {'_id': ObjectId(project_id)},
+                {'$pull': {'employees': user_id}}
+            )
+            return result.modified_count > 0
+        elif found_user['role'] == 'client':
+            result = self.projects_collection.update_one(
+                {'_id': ObjectId(project_id)},
+                {'$pull': {'clients': user_id}}
+            )
+            return result.modified_count > 0
+        return False
 
 
 

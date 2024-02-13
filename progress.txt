@@ -1,6 +1,6 @@
 created admin dashboard
-    - add ability for admins to create/delete projects and assign them to employees and clients
-
+    # add ability for admins to create/delete projects and assign them to employees and clients
+    - fix buttons on admin modal to assign/unassign users
 employee dashboard
     - fix this
     - add ability to update projects/add objectives
