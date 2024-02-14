@@ -2,7 +2,7 @@ from pymongo.collection import Collection
 from pymongo.database import Database
 from flask import jsonify
 from pymongo import MongoClient
-from bson import ObjectId
+import uuid
 import json
 
 class ProjectController:
@@ -10,37 +10,50 @@ class ProjectController:
         self.projects_collection: Collection = db.projects
         self.db = db
     def create_project(self, title: str, description: str) -> str:
-        project_data = {'title': title, 'description': description, 'objectives': [], 'clients': [], 'employees': []}
-        result = self.projects_collection.insert_one(project_data)
-        project_id = str(result.inserted_id)
-        return project_id
 
+        project_id = uuid.uuid4().hex
+
+        project_data = {
+            '_id': project_id,
+            'title': title,
+            'description': description,
+            'objectives': [],
+            'clients': [],
+            'employees': []
+        }
+
+        self.projects_collection.insert_one(project_data)
+
+        return project_id
 
     def update_project(self, project_id: str, title: str, description: str) -> bool:
         result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
+            {'_id': project_id},
             {'$set': {'title': title, 'description': description}}
         )
         return result.modified_count > 0
 
     def delete_project(self, project_id: str) -> bool:
-        result = self.projects_collection.delete_one({'_id': ObjectId(project_id)})
-        return result.deleted_count > 0
+        #delete project from all users associated projects
+        user_update_result = self.db.users.update_many(
+            {},
+            {'$pull': {'associated_projects': project_id}}
+        )
+        
+        # actually delete project
+        project_delete_result = self.projects_collection.delete_one({'_id': project_id})
+        
+        # Check if the project was successfully deleted
+        return project_delete_result.deleted_count > 0
+
 
     def get_all_projects(self) -> list[dict]:
-        projects = list(self.projects_collection.find({}))
-        # Convert ObjectId fields to strings
-        for project in projects:
-            project['_id'] = str(project['_id'])
-        return projects
+        return list(self.projects_collection.find({}))
 
     def get_user_by_id(self, user_id: str) -> dict:
-        user = self.db.users.find_one({'_id': ObjectId(user_id)})
-        if user:
-            return json.dumps(user, default=str)
-        else:
-            return {}
-
+        user = self.db.users.find_one({'_id': user_id})
+        if user: return user
+        return {}
 
 
 
@@ -51,7 +64,7 @@ class ProjectController:
 
 
     def get_associated_employees(self, project_id: str) -> list[dict]:
-        project = self.projects_collection.find_one({'_id': ObjectId(project_id)})
+        project = self.projects_collection.find_one({'_id': project_id})
         if project:
             employees = project.get('employees', [])
             return employees
@@ -59,7 +72,7 @@ class ProjectController:
             return []
 
     def get_associated_clients(self, project_id: str) -> list[dict]:
-        project = self.projects_collection.find_one({'_id': ObjectId(project_id)})
+        project = self.projects_collection.find_one({'_id': project_id})
         if project:
             clients = project.get('clients', [])
             return clients
@@ -67,38 +80,71 @@ class ProjectController:
             return []
 
     def add_user_to_project(self, project_id: str, user_id: str) -> bool:
-        found_user = json.loads(self.get_user_by_id(user_id))
-        print(found_user)
-        if found_user['role'] == 'employee':
-            result = self.projects_collection.update_one(
-                {'_id': ObjectId(project_id)},
-                {'$addToSet': {'employees': user_id}}
+        found_user = self.get_user_by_id(user_id)
+        
+        if found_user and 'role' in found_user:
+            role_field = found_user['role'] + 's' #'employee' -> 'employees', etc.
+            user_email = found_user['email']
+            #add associated users to project
+            project_update_result = self.projects_collection.update_one(
+                {'_id': project_id},
+                {'$addToSet': {role_field: user_email}}
             )
-            return result.modified_count > 0
-        elif found_user['role'] == 'client':
-            result = self.projects_collection.update_one(
-                {'_id': ObjectId(project_id)},
-                {'$addToSet': {'clients': user_id}}
+            
+            #add project to user's associated projects
+            user_update_result = self.db.users.update_one(
+                {'_id': user_id},
+                {'$addToSet': {'associated_projects': project_id}}
             )
-            return result.modified_count > 0
+            
+            #check if both updates were successful
+            return project_update_result.modified_count > 0 and user_update_result.modified_count > 0
+        
         return False
+
 
 
     def remove_user_from_project(self, project_id: str, user_id: str) -> bool:
-        found_user = json.loads(self.get_user_by_id(user_id))
-        if found_user['role'] == 'employee':
-            result = self.projects_collection.update_one(
-                {'_id': ObjectId(project_id)},
-                {'$pull': {'employees': user_id}}
+        found_user = self.get_user_by_id(user_id)
+        user_email = found_user['email']
+        if found_user and 'role' in found_user:
+            role_field = found_user['role'] + 's' #'employee' -> 'employees', etc.
+            
+            #remove associated user from project
+            project_update_result = self.projects_collection.update_one(
+                {'_id': project_id},
+                {'$pull': {role_field: user_email}}
             )
-            return result.modified_count > 0
-        elif found_user['role'] == 'client':
-            result = self.projects_collection.update_one(
-                {'_id': ObjectId(project_id)},
-                {'$pull': {'clients': user_id}}
+            
+            #remove project from user's associated projects
+            user_update_result = self.db.users.update_one(
+                {'_id': user_id},
+                {'$pull': {'associated_projects': project_id}}
             )
-            return result.modified_count > 0
+            
+            #check if both updates were successful
+            return project_update_result.modified_count > 0 and user_update_result.modified_count > 0
+        
         return False
+
+
+    def remove_user_from_all_projects(self, user_id: str) -> bool:
+        #get user email and role
+        user = self.get_user_by_id(user_id)
+        if not user: return False
+
+        user_email = user.get('email')
+        user_role = user.get('role', '') + 's'  #'employee' -> 'employees'
+
+        # update all projects
+        update_result = self.projects_collection.update_many(
+            {},
+            {'$pull': {user_role: user_email}}
+        )
+        return update_result.modified_count > 0
+
+
+
 
 
 
@@ -110,7 +156,7 @@ class ProjectController:
 
 
     def add_objective(self, project_id: str, title: str, description: str, time_to_completion: int) -> bool:
-        objective_id = ObjectId()
+        objective_id = uuid.uuid4().hex
         objective_data = {
             '_id': objective_id,
             'title': title,
@@ -118,21 +164,21 @@ class ProjectController:
             'time_to_completion': time_to_completion
         }
         result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
+            {'_id': project_id},
             {'$push': {'objectives': objective_data}}
         )
         return result.modified_count > 0
 
     def edit_objective(self, project_id: str, objective_id: str, title: str, description: str, time_to_completion: int) -> bool:
         result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id), 'objectives._id': ObjectId(objective_id)},
+            {'_id': project_id, 'objectives._id': objective_id},
             {'$set': {'objectives.$.title': title, 'objectives.$.description': description, 'objectives.$.time_to_completion': time_to_completion}}
         )
         return result.modified_count > 0
 
     def delete_objective(self, project_id: str, objective_id: str) -> bool:
         result = self.projects_collection.update_one(
-            {'_id': ObjectId(project_id)},
-            {'$pull': {'objectives': {'_id': ObjectId(objective_id)}}}
+            {'_id': project_id},
+            {'$pull': {'objectives': {'_id': objective_id}}}
         )
         return result.modified_count > 0

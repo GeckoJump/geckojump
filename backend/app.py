@@ -221,11 +221,12 @@ def get_users_by_roles():
 
 
 
+# project_controller.create_project('project gecko 1', 'very cool company project')
+# project_controller.create_project('project gecko 2', 'another very cool company project')
+# project_controller.create_project('project 3', 'boring')
 
 
-
-
-
+#user_controller.create_user('toiletpancakes@gmail.com','mason hagan', 'admin')
 
 
 
@@ -268,7 +269,7 @@ def remove_user_from_project():
 
 
 
-print(project_controller.get_user_by_id('65c7c2d1adadf614ee036eae'))
+
 
 
 
@@ -289,13 +290,12 @@ def create_project():
 @login_required(roles=['employee', 'admin'])
 def get_projects():
     projects = project_controller.get_all_projects() 
-    print(type(projects))
-    return jsonify(projects), 200
+    return projects, 200
 
 
 ##### RETURN SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['GET'])
-@login_required(roles=['employee', 'client'])
+@login_required(roles=['employee', 'client', 'admin'])
 def get_project(project_id):
     project = project_controller.get_project_by_id(project_id)
     if not project:
@@ -305,7 +305,7 @@ def get_project(project_id):
 
 ##### UPDATE SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['PUT'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee', 'admin'])
 def update_project(project_id):
     data = request.json
     title = data.get('title')
@@ -319,7 +319,7 @@ def update_project(project_id):
 
 ##### DELETE SPECIFIC PROJECT #####
 @app.route('/api/projects/<project_id>', methods=['DELETE'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee','admin'])
 def delete_project(project_id):
     if project_controller.delete_project(project_id):
         return jsonify({'message': 'Project deleted successfully'}), 200
@@ -329,7 +329,7 @@ def delete_project(project_id):
 
 ##### ADD OBJECTIVE TO PROJECT
 @app.route('/api/projects/<project_id>/objectives', methods=['POST'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee','admin'])
 def add_objective(project_id):
     data = request.json
     title = data.get('title')
@@ -345,7 +345,7 @@ def add_objective(project_id):
 
 ##### UPDATE SPECIFIC OBJECTIVE FOR PROJECT #####
 @app.route('/api/projects/<project_id>/objectives/<objective_id>', methods=['PUT'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee','admin'])
 def edit_objective(project_id, objective_id):
     data = request.json
     title = data.get('title')
@@ -361,7 +361,7 @@ def edit_objective(project_id, objective_id):
 
 ##### DELETE SPECIFIC OBJECTIVE FOR PROJECT #####
 @app.route('/api/projects/<project_id>/objectives/<objective_id>', methods=['DELETE'])
-@login_required(roles=['employee'])
+@login_required(roles=['employee','admin'])
 def delete_objective(project_id, objective_id):
     if project_controller.delete_objective(project_id, objective_id):
         return jsonify({'message': 'Objective deleted successfully'}), 200
