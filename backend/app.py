@@ -213,7 +213,6 @@ def delete_user(email):
 @login_required(roles=['admin'])  # Only admins can get users by roles
 def get_users_by_roles():
     users_by_role = user_controller.get_users_by_roles()
-    # Convert ObjectId fields to strings
     users_by_role_json = json_util.dumps(users_by_role)
     return users_by_role_json, 200
 
@@ -269,6 +268,26 @@ def remove_user_from_project():
 
 
 
+@app.route('/api/projects/user/<user_email>', methods=['GET'])
+@login_required(roles=['employee', 'admin', 'client'])
+def get_projects_by_user(user_email):
+    #does this user exist?
+    user = user_controller.get_user_by_email(user_email)
+    if not user:
+
+        return jsonify({'error': 'User not found'}), 404
+
+    projects = project_controller.get_projects_by_user_email(user_email)
+    if projects is not None:
+        
+        projects_json = json_util.dumps(projects)
+        return projects_json, 200
+    else:
+        return jsonify({'error': 'No projects found for this user'}), 404
+
+
+
+
 
 
 
@@ -290,7 +309,7 @@ def create_project():
 @login_required(roles=['employee', 'admin'])
 def get_projects():
     projects = project_controller.get_all_projects() 
-    return projects, 200
+    return projects
 
 
 ##### RETURN SPECIFIC PROJECT #####
@@ -300,7 +319,7 @@ def get_project(project_id):
     project = project_controller.get_project_by_id(project_id)
     if not project:
         return jsonify({'error': 'Project not found'}), 404
-    return jsonify(project.to_dict())
+    return project
 
 
 ##### UPDATE SPECIFIC PROJECT #####
@@ -326,6 +345,42 @@ def delete_project(project_id):
     return jsonify({'error': 'Failed to delete project'}), 500
 
 
+##########################################################################################
+################################ PROJECT OBJECTIVES ######################################
+##########################################################################################
+
+##### RETURN ALL OBJECTIVES OF A SPECIFIC PROJECT
+@app.route('/api/projects/<project_id>/objectives', methods=['GET'])
+@login_required(roles=['employee', 'admin'])
+def get_project_objectives(project_id):
+    project = project_controller.get_project_by_id(project_id)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    objectives = project.get('objectives', [])
+    return jsonify(objectives), 200
+
+
+@app.route('/api/projects/<project_id>/objectives/<objective_id>', methods=['GET'])
+@login_required(roles=['employee', 'admin'])
+def get_specific_objective(project_id, objective_id):
+    project_response = project_controller.get_project_by_id(project_id)
+    if not project_response:
+        return jsonify({'error': 'Project not found'}), 404
+
+    
+    project, status_code = project_response
+
+
+    if status_code != 200 or not project:
+        return jsonify({'error': 'Project not found'}), status_code
+
+    objective = next((obj for obj in project.get('objectives', []) if obj['_id'] == objective_id), None)
+
+    if not objective:
+        return jsonify({'error': 'Objective not found'}), 404
+
+    return jsonify(objective), 200
+
 
 ##### ADD OBJECTIVE TO PROJECT
 @app.route('/api/projects/<project_id>/objectives', methods=['POST'])
@@ -334,10 +389,9 @@ def add_objective(project_id):
     data = request.json
     title = data.get('title')
     description = data.get('description')
-    time_to_completion = data.get('time_to_completion')
-    if not title or not description or not time_to_completion:
-        return jsonify({'error': 'Title, description, and time_to_completion are required'}), 400
-    if project_controller.add_objective(project_id, title, description, time_to_completion):
+    if not title or not description:
+        return jsonify({'error': 'Title and description are required'}), 400
+    if project_controller.add_objective(project_id, title, description):
         return jsonify({'message': 'Objective added successfully'}), 201
     return jsonify({'error': 'Failed to add objective'}), 500
 
@@ -350,10 +404,9 @@ def edit_objective(project_id, objective_id):
     data = request.json
     title = data.get('title')
     description = data.get('description')
-    time_to_completion = data.get('time_to_completion')
-    if not title or not description or not time_to_completion:
-        return jsonify({'error': 'Title, description, and time_to_completion are required'}), 400
-    if project_controller.edit_objective(project_id, objective_id, title, description, time_to_completion):
+    if not title or not description:
+        return jsonify({'error': 'Title and description are required'}), 400
+    if project_controller.edit_objective(project_id, objective_id, title, description):
         return jsonify({'message': 'Objective edited successfully'}), 200
     return jsonify({'error': 'Failed to edit objective'}), 500
 
@@ -366,6 +419,64 @@ def delete_objective(project_id, objective_id):
     if project_controller.delete_objective(project_id, objective_id):
         return jsonify({'message': 'Objective deleted successfully'}), 200
     return jsonify({'error': 'Failed to delete objective'}), 500
+
+
+
+
+
+
+##########################################################################################
+################################ OBJECTIVE CHECKLIST #####################################
+##########################################################################################
+
+
+
+##### GET CHECKLIST FOR SPECIFIC OBJECTIVE
+@app.route('/api/projects/<project_id>/objectives/<objective_id>/checklist', methods=['GET'])
+@login_required(roles=['employee', 'admin'])
+def get_objective_checklist(project_id, objective_id):
+    project = project_controller.get_project_by_id(project_id)
+    if not project:
+        return jsonify({'error': 'Project not found'}), 404
+    objective = next((obj for obj in project.get('objectives', []) if obj['_id'] == objective_id), None)
+    if not objective:
+        return jsonify({'error': 'Objective not found'}), 404
+    checklist = objective.get('checklist', [])
+    return jsonify(checklist), 200
+
+
+
+
+@app.route('/api/projects/<project_id>/objectives/<objective_id>/checklist', methods=['POST'])
+@login_required(roles=['employee', 'admin'])
+def add_checklist_item(project_id, objective_id):
+    data = request.json
+    description = data.get('description')
+    if not description:
+        return jsonify({'error': 'Description is required'}), 400
+    if project_controller.add_checklist_item(project_id, objective_id, description):
+        return jsonify({'message': 'Checklist item added successfully'}), 201
+    return jsonify({'error': 'Failed to add checklist item'}), 500
+
+
+@app.route('/api/projects/<project_id>/objectives/<objective_id>/checklist/<checklist_item_id>', methods=['DELETE'])
+@login_required(roles=['employee', 'admin'])
+def delete_checklist_item(project_id, objective_id, checklist_item_id):
+    if project_controller.delete_checklist_item(project_id, objective_id, checklist_item_id):
+        return jsonify({'message': 'Checklist item deleted successfully'}), 200
+    return jsonify({'error': 'Failed to delete checklist item'}), 500
+
+
+
+
+@app.route('/api/projects/<project_id>/objectives/<objective_id>/checklist/<checklist_item_id>/toggle', methods=['PUT'])
+@login_required(roles=['employee', 'admin'])
+def toggle_checklist_item(project_id, objective_id, checklist_item_id):
+    if project_controller.toggle_checklist_item(project_id, objective_id, checklist_item_id):
+            return jsonify({'message': 'Checklist item toggled successfully'}), 200
+    else:
+        return jsonify({'error': 'Failed to toggle checklist item'}), 500
+
 
 
 

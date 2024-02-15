@@ -4,6 +4,7 @@ import { AuthProvider } from './AuthProvider';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
+import EmployeeProjectDetail from './pages/EmployeeProjectDetail';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
           <Route path="/" element={<Home/>} />
           <Route path="/api/login" element={<Login />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/employee/projects/:projectId" element={<EmployeeProjectDetail/>}/>
         </Routes>
       </BrowserRouter>
     </AuthProvider>

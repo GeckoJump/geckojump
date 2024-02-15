@@ -4,7 +4,8 @@ import { useAuth } from '../AuthProvider';
 import axios from 'axios';
 import StickyNavbar from '../components/StickyNavbar';
 import AdminDashboard from '../components/AdminDashboard';
-
+import ClientDashboard from '../components/ClientDashboard';
+import EmployeeDashboard from '../components/EmployeeDashboard';
 
 interface User {
   email: string;
@@ -57,7 +58,8 @@ const Dashboard: React.FC = () => {
             <p className="text-lg"><span className="font-medium">Email:</span> {userEmail}</p>
             <p className="text-lg"><span className="font-medium">Role:</span> {userRole}</p>
           </div>
-          {userRole === 'admin' && <AdminDashboard />}
+          {userRole === 'admin' && <AdminDashboard/>}
+          {userRole != 'client' && <EmployeeDashboard email={userEmail}/>}
         </div>
       </div>
     </>
