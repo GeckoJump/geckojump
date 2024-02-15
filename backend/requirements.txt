@@ -8,3 +8,5 @@ pymongo
 google-auth
 requests-oauthlib
 google-auth-oauthlib
+sendgrid
+google-cloud-recaptcha-enterprise

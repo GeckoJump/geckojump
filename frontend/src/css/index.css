@@ -2,6 +2,65 @@
 @tailwind components;
 @tailwind utilities;
 
+.hover-underline-animation {
+  @apply inline-block relative;
+}
+
+.hover-underline-animation::after {
+  .dark:bg-white {
+    background-color: white;
+  }
+
+  .bg-black {
+    background-color: black;
+  }
+
+  .content {
+    content: '';
+  }
+
+  .absolute {
+    position: absolute;
+  }
+
+  .w-full {
+    width: 100%;
+  }
+
+  .scale-x-0 {
+    transform: scaleX(0);
+  }
+
+  .h-[2px] {
+    height: 2px;
+  }
+
+  .bottom-0 {
+    bottom: 0;
+  }
+
+  .left-0 {
+    left: 0;
+  }
+
+  .origin-left {
+    transform-origin: left;
+  }
+
+  .transition-all {
+    transition-property: all;
+  }
+
+  .ease-in-out {
+    transition-timing-function: ease-in-out;
+  }
+}
+
+.hover-underline-animation:hover::after {
+  @apply scale-x-100;
+}
+
+
 @font-face {
   font-family: 'Protest Riot';
   src: url('./fonts/ProtestRiot-Regular.ttf');
@@ -12,15 +71,22 @@
   src: url('fonts/BebasNeue-Regular.ttf');
 }
 
-html, body {
+html,
+body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
-  scroll-snap-type: y proximity;
-  scroll-snap-stop: always;
+  overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  overflow-y: scroll;
+  scroll-snap-type: y proximity;
+  scroll-snap-stop: always;
+  height: 100vh;
 }
 
 code {

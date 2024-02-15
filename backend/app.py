@@ -1,4 +1,6 @@
 from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect, url_for
+from utils.recaptcha_protect import recaptcha_protect
+from mail.mailer import on_contact_form_submit
 from flask_cors import CORS
 from bson import json_util
 import requests
@@ -75,7 +77,7 @@ def auth():
 
         if not session["state"] == request.args["state"]:
             print('state not found')
-            abort(500)  # State does not match!
+            return 'State not found', 401
 
         credentials = flow.credentials
         request_session = requests.session()
@@ -112,6 +114,23 @@ def auth():
         print(e)
         return jsonify({'error': 'Token validation failed'}), 401
     
+@app.route('/api/contact', methods=['POST'])
+@recaptcha_protect
+def contact():
+    fields = ['email', 'name', 'message', 'company', 'phone']
+    data = request.get_json()
+
+    # Check if all required fields are present
+    for field in fields:
+        if field not in data:
+            return jsonify({'error': f'{field} is required'}), 400
+    
+    email, name, message, company, phone = data['email'], data['name'], data['message'], data['company'], data['phone']
+
+    # Send an email to the user
+    on_contact_form_submit(email, name, message, company, phone)
+    return jsonify({'message': 'Contact form submitted'}), 200
+    
 
 
 @app.route('/api/user', methods=['GET'])
@@ -121,10 +140,6 @@ def get_user_info():
         return jsonify(user_info), 200
     else:
         return jsonify({'error': 'User not found'}), 404
-
-
-
-
 
 
 #decorator to make sure people are authenticated before they make an api call
