@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
+import Modal from '../Modal';
 
 import axios from 'axios';
 
@@ -32,8 +32,8 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ show, onHide, onSucce
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onHide} exitButton>
+      <Modal.Header>
         <Modal.Title>Create User</Modal.Title>
       </Modal.Header>
       <Modal.Body>

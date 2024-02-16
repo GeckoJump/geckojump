@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import StickyNavbar from '../components/StickyNavbar';
-import AddObjectiveModal from '../components/AddObjectiveModal';
+import AddObjectiveModal from '../components/dashboard/AddObjectiveModal';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 

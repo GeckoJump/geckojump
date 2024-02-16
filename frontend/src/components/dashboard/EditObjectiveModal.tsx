@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from '../Modal';
 import axios from 'axios';
 
 
@@ -143,8 +142,8 @@ const checklistUI = (
 );
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onHide}>
+      <Modal.Header>
         <Modal.Title>Edit Objective</Modal.Title>
       </Modal.Header>
       <Modal.Body>

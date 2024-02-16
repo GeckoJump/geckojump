@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from '../Modal';
 import axios from 'axios';
 
 interface CreateProjectModalProps {
@@ -31,8 +30,8 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ show, onHide, o
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onHide}>
+      <Modal.Header>
         <Modal.Title>Create Project</Modal.Title>
       </Modal.Header>
       <Modal.Body>

@@ -1,6 +1,5 @@
 import React from 'react';
-import Button from 'react-bootstrap/Button';
-import Modal from 'react-bootstrap/Modal';
+import Modal from '../Modal';
 
 interface User {
     email: string;
@@ -75,8 +74,8 @@ const MyVerticallyCenteredModal = (props: ModalProps) => {
     };
 
     return (
-        <Modal show={props.show} onHide={onHide} size="lg" centered>
-            <Modal.Header closeButton>
+        <Modal show={props.show} onHide={onHide}>
+            <Modal.Header>
                 <Modal.Title>Assign Project</Modal.Title>
             </Modal.Header>
             <Modal.Body>

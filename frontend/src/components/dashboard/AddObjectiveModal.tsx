@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import Modal from 'react-bootstrap/Modal';
-import Button from 'react-bootstrap/Button';
+import Modal from '../Modal';
 import axios from 'axios';
 
 interface AddObjectiveModalProps {
@@ -31,8 +30,8 @@ const AddObjectiveModal: React.FC<AddObjectiveModalProps> = ({ show, onHide, onS
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
+    <Modal show={show} onHide={onHide}>
+      <Modal.Header>
         <Modal.Title>Add Objective</Modal.Title>
       </Modal.Header>
       <Modal.Body>

@@ -3,9 +3,9 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthProvider';
 import axios from 'axios';
 import StickyNavbar from '../components/StickyNavbar';
-import AdminDashboard from '../components/AdminDashboard';
-import ClientDashboard from '../components/ClientDashboard';
-import EmployeeDashboard from '../components/EmployeeDashboard';
+import AdminDashboard from '../components/dashboard/AdminDashboard';
+import ClientDashboard from '../components/dashboard/ClientDashboard';
+import EmployeeDashboard from '../components/dashboard/EmployeeDashboard';
 
 interface User {
   email: string;

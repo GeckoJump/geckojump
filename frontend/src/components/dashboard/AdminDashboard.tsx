@@ -110,8 +110,6 @@ const AdminDashboard: React.FC = () => {
     }
   };
 
-
-
   const deleteUser = async (userEmail: string) => {
     try {
       await axios.delete(`/api/users/${userEmail}`);
@@ -121,9 +119,6 @@ const AdminDashboard: React.FC = () => {
       setErrorMessage('Failed to delete user');
     }
   };
-
-
-
 
   const associateUserWithProject = async (email: string, projectId: string) => {
     try {

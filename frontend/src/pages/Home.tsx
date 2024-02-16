@@ -11,6 +11,8 @@ import TechIllustration2 from '../svg/tech-illustration-2.svg'
 import { SectionDivider } from '../components/SectionDivider';
 import { ConsultingServicesSection } from '../sections/ConsultingServicesSection';
 import { ContactSection } from '../sections/ContactSection';
+import Modal from '../components/Modal';
+import CreateUserModal from '../components/dashboard/CreateUserModal';
 
 function App() {
   return (
