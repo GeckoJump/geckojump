@@ -20,16 +20,19 @@ const EmployeeDashboard: React.FC<EmployeeDashboardProps> = ({ email }) => {
 
   useEffect(() => {
     const fetchProjects = async () => {
-      try {
-        const response = await axios.get(`/api/projects/user/${email}`);
-        setProjects(response.data);
-      } catch (err) {
-        setError('Failed to fetch projects');
-      } finally {
-        setLoading(false);
+      if (email) { // Only proceed if email is not null
+        try {
+          const response = await axios.get(`/api/projects/user/${email}`);
+          setProjects(response.data);
+        } catch (err) {
+          setError('Failed to fetch projects');
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false); // Ensure loading is set to false even if there's no email
       }
     };
-
     fetchProjects();
   }, [email]);
 

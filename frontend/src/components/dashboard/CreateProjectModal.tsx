@@ -41,7 +41,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ show, onHide, o
             <label htmlFor="title" className="form-label">Project Title</label>
             <input
               type="text"
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -50,7 +50,7 @@ const CreateProjectModal: React.FC<CreateProjectModalProps> = ({ show, onHide, o
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Project Description</label>
             <textarea
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}

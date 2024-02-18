@@ -41,11 +41,13 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ show, onHide, onSucce
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="email" className="form-label">Email address</label>
-            <input type="email" className="form-control" id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+            <input type="email" className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+             id="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           </div>
           <div className="mb-3">
             <label htmlFor="fullName" className="form-label">Full Name</label>
-            <input type="text" className="form-control" id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+            <input type="text" className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+             id="fullName" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
           </div>
           <div className="mb-3">
             <label htmlFor="role" className="form-label">Role</label>
@@ -63,7 +65,7 @@ const CreateUserModal: React.FC<CreateUserModalProps> = ({ show, onHide, onSucce
         </form>
       </Modal.Body>
       <Modal.Footer>
-        <button className="bg-gray-500 text-white active:bg-gray-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1 ease-linear transition-all duration-150"
+        <button className="bg-gray-500 text-white active:bg-gray-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mb-1 ease-linear transition-all duration-150"
          onClick={onHide}>Close</button>
       </Modal.Footer>
     </Modal>

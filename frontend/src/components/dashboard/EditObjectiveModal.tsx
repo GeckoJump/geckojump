@@ -127,8 +127,8 @@ const checklistUI = (
       ))}
     </div>
     <input
-      className="form-input mt-3 p-2 w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
-      placeholder="Add new item..."
+      className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-5 mb-5"
+      placeholder="Add new item and press enter..."
       value={newChecklistItemDesc}
       onChange={(e) => setNewChecklistItemDesc(e.target.value)}
       onKeyDown={(e) => {
@@ -154,7 +154,7 @@ const checklistUI = (
             <label htmlFor="title" className="form-label">Objective Title</label>
             <input
               type="text"
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -163,7 +163,7 @@ const checklistUI = (
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Objective Description</label>
             <textarea
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}

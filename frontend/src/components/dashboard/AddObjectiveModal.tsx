@@ -9,7 +9,13 @@ interface AddObjectiveModalProps {
   projectId: string;
 }
 
-const AddObjectiveModal: React.FC<AddObjectiveModalProps> = ({ show, onHide, onSuccess, projectId }) => {
+const AddObjectiveModal: React.FC<AddObjectiveModalProps> = ({ 
+  show, 
+  onHide, 
+  onSuccess, 
+  projectId 
+}) => {
+    
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -41,7 +47,7 @@ const AddObjectiveModal: React.FC<AddObjectiveModalProps> = ({ show, onHide, onS
             <label htmlFor="title" className="form-label">Objective Title</label>
             <input
               type="text"
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-5 mb-5"
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -50,7 +56,7 @@ const AddObjectiveModal: React.FC<AddObjectiveModalProps> = ({ show, onHide, onS
           <div className="mb-3">
             <label htmlFor="description" className="form-label">Objective Description</label>
             <textarea
-              className="form-control"
+              className="form-control appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm mt-5 mb-5"
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}

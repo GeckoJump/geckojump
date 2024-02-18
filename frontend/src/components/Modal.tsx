@@ -31,15 +31,15 @@ const Modal = ({ children, show: initialShow, exitButton, onHide }: ModalProps) 
   }
 
   return (
-    <div className={`${show ? 'fixed' : 'hidden'} top-0 left-0 w-full h-full z-[999] bg-black bg-opacity-50 flex items-center justify-center`}>
+    <div className={`${show ? 'fixed' : 'hidden'} inset-0 z-[999] bg-black bg-opacity-50 flex items-center justify-center`}>
       <div className="flex flex-col bg-white p-8 w-1/2 rounded-lg shadow-lg gap-4">
-        {exitButton && (
+        {/* {exitButton && (
         <div className="flex justify-end">
           <button 
             className="text-2xl font-bold focus:outline-none hover:text-red-500 transition-all duration-300 ease-in-out"
-            onClick={closeHandler}>X</button>
+            onClick={closeHandler}>x</button>
         </div>
-        )}
+        )} */}
         {modalHeader}
         {modalContent}
         {modalFooter}
@@ -48,32 +48,32 @@ const Modal = ({ children, show: initialShow, exitButton, onHide }: ModalProps) 
   )
 }
 
-const Header = ({ children, className: additionalClasses }: { children?: ReactNode, className?: string }) => {
-  return <div
-    className={`${additionalClasses}`}
-  >{children}</div>
-}
+// Header component
+const Header = ({ children, className = '' }: { children?: ReactNode, className?: string }) => (
+  <div className={className}>{children}</div>
+);
+Header.displayName = 'Header';
+Modal.Header = Header;
 
+// Title component
 const Title = ({ children }: { children: string }) => {
-  const innerText = React.Children.toArray(children).join('')
-  return <div className="h2">{innerText}</div>
-}
-Modal.Title = Title
+  const innerText = React.Children.toArray(children).join('');
+  return <div className="h2">{innerText}</div>;
+};
+Title.displayName = 'Title';
+Modal.Title = Title;
 
-Header.displayName = 'Header'
+// Body component
+const Body = ({ children, className = '' }: { children: ReactNode, className?: string }) => (
+  <div className={className}>{children}</div>
+);
+Body.displayName = 'Content';
+Modal.Body = Body;
 
-const Body = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>
-}
-Body.displayName = 'Content'
-Modal.Body = Body
-
-const Footer = ({ children }: { children: ReactNode }) => {
-  return <div>{children}</div>
-}
-Footer.displayName = 'Footer'
-
-Modal.Header = Header
-Modal.Footer = Footer
-
+// Footer component
+const Footer = ({ children, className = '' }: { children: ReactNode, className?: string }) => (
+  <div className={className}>{children}</div>
+);
+Footer.displayName = 'Footer';
+Modal.Footer = Footer;
 export default Modal
