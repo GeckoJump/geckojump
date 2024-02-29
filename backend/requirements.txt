@@ -5,3 +5,5 @@ Authlib
 requests
 pyjwt
 gunicorn
+sendgrid
+google-cloud-recaptcha-enterprise
