@@ -8,8 +8,10 @@ from authlib.integrations.flask_client import OAuth
 import jwt
 from jwt import PyJWKClient
 import os
+import config
 
 app = Flask(__name__)
+app.config.from_object(config.Config)
 
 api = Api(app)
 CORS(app)
