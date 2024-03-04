@@ -10,7 +10,7 @@ module.exports = {
         'pallete-3': '#71faca'
       },
       fontFamily: {
-        sans: ['Graphik', 'sans-serif'],
+        sans: ['HelveticaNow', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
         BebasNeue: ['BebasNeue-Regular', 'sans-serif']
       }

@@ -18,7 +18,7 @@ function App() {
       <StickyNavbar />
       <HeroSection />
       <ServicesSection />
-      <SectionDivider className='pt-24 lg:pt-48' />
+      <SectionDivider className='pt-24 lg:pt-48 xl:pt-64' />
       <TwoSidedLayout>
         <SoftwareServicesSection />
         <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
