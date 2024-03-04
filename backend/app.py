@@ -1,6 +1,6 @@
 from utils.recaptcha_protect import recaptcha_protect
 from mail.mailer import on_contact_form_submit
-from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect
+from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect, current_app
 from flask_cors import CORS
 import requests
 from flask_restful import Resource, Api
@@ -30,7 +30,7 @@ oauth.register(
     #access_token_method='POST',
     #refresh_token_url=None,
     #refresh_token_params=None,
-    redirect_uri='http://localhost:5000/auth',
+    redirect_uri=f'{os.environ.get('API_BASE_URL')}/auth',
     client_kwargs={'scope': 'openid email profile'},
     server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
 )
@@ -57,7 +57,7 @@ oauth.register(
 
 @app.route('/api/login')
 def login():
-    redirect_uri = 'http://localhost:5000/api/auth'
+    redirect_uri = f'{os.environ.get('API_BASE_URL')}/api/auth'
     return oauth.google.authorize_redirect(redirect_uri)
 
 @app.route('/api/auth')
@@ -87,7 +87,7 @@ def auth():
             'email': payload.get('email'),
         }
         session['user'] = user_info
-        frontend_redirect_url = f"http://localhost:3000/dashboard?token={token['access_token']}"
+        frontend_redirect_url = f"/dashboard?token={token['access_token']}"
         return redirect(frontend_redirect_url)
     except Exception as e:
         # Token validation failed
