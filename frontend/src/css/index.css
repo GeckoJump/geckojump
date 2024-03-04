@@ -71,6 +71,16 @@
   src: url('fonts/BebasNeue-Regular.ttf');
 }
 
+@font-face {
+  font-family: 'HelveticaNow';
+  src: url('fonts/helveticanowtext-black-demo.ttf');
+}
+
+@font-face {
+  font-family: 'HelveticaNow-Bold';
+  src: url('fonts/helveticanowtext-bold-demo.ttf');
+}
+
 html,
 body {
   margin: 0;
@@ -80,6 +90,7 @@ body {
   overflow: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: theme('colors.zinc.50');
 }
 
 html {
