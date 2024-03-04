@@ -11,3 +11,5 @@ class Config(object):
   GOOGLE_CLIENT_ID = os.environ.get('GOOGLE_CLIENT_ID')
   GOOGLE_CLIENT_SECRET = os.environ.get('GOOGLE_CLIENT_SECRET')
   GOOGLE_CLOUD_PROJECT_ID = os.environ.get('GOOGLE_CLOUD_PROJECT_ID')
+  API_BASE_URL = os.environ.get('API_BASE_URL')
+  FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL')
