@@ -9,6 +9,9 @@ import jwt
 from jwt import PyJWKClient
 import os
 import config
+import dotenv
+
+dotenv.load_dotenv()
 
 app = Flask(__name__)
 app.config.from_object(config.Config)
@@ -16,13 +19,16 @@ app.config.from_object(config.Config)
 api = Api(app)
 CORS(app)
 
-app.secret_key = os.environ.get('FLASK_SECRET_KEY')
+app.secret_key = os.environ.get('FLASK_SECRET_KEY', 'INSECURE_KEY')
+
+API_BASE_URL = os.environ.get('API_BASE_URL', 'http://localhost:5000')
+FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://localhost:3000')
 
 oauth = OAuth(app)
 oauth.register(
     name='google',
-    client_id= os.environ.get('GOOGLE_CLIENT_ID'),
-    client_secret= os.environ.get('GOOGLE_CLIENT_SECRET'),
+    client_id= os.environ['GOOGLE_CLIENT_ID'],
+    client_secret=os.environ['GOOGLE_CLIENT_SECRET'],
     #authorize_url='https://accounts.google.com/o/oauth2/auth',
     #authorize_params={},
     #access_token_url='https://accounts.google.com/o/oauth2/token',
@@ -30,7 +36,7 @@ oauth.register(
     #access_token_method='POST',
     #refresh_token_url=None,
     #refresh_token_params=None,
-    redirect_uri=f'{os.environ.get('API_BASE_URL')}/auth',
+    redirect_uri=f'{API_BASE_URL}/api/auth',
     client_kwargs={'scope': 'openid email profile'},
     server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
 )
@@ -57,7 +63,7 @@ oauth.register(
 
 @app.route('/api/login')
 def login():
-    redirect_uri = f'{os.environ.get('API_BASE_URL')}/api/auth'
+    redirect_uri = f'{API_BASE_URL}/api/auth'
     return oauth.google.authorize_redirect(redirect_uri)
 
 @app.route('/api/auth')
@@ -87,7 +93,7 @@ def auth():
             'email': payload.get('email'),
         }
         session['user'] = user_info
-        frontend_redirect_url = f"/dashboard?token={token['access_token']}"
+        frontend_redirect_url = f"{FRONTEND_BASE_URL}/dashboard?token={token['access_token']}"
         return redirect(frontend_redirect_url)
     except Exception as e:
         # Token validation failed

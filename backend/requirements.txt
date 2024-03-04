@@ -7,3 +7,4 @@ pyjwt
 gunicorn
 sendgrid
 google-cloud-recaptcha-enterprise
+python-dotenv
