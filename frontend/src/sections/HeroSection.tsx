@@ -22,12 +22,12 @@ export const HeroSection = () => {
         <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
           <div className="flex flex-col justify-center mx-auto max-w-3xl w-full text-center">
             <h1
-              className="bg-gradient-to-r from-green-700 via-green-400 to-blue-600 bg-clip-text text-5xl font-extrabold text-transparent sm:text-5xl"
+              className="bg-gradient-to-r from-green-700 via-green-400 to-blue-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl md:text-5xl"
             >
               <TypeAnimation
                 wrapper="span"
                 style={{ display: "block", whiteSpace: "pre-line" }}
-                className='antialiased tracking-tight'
+                className='antialiased tracking-tight font-sans font-thin'
                 sequence={[
                   "Elevate Your Business\n With Tech.",
                   1000,
