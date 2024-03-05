@@ -88,7 +88,7 @@ export const ContactSection = () => {
     <div ref={ref} id="contact-section" className="flex flex-col items-center w-full justify-center py-12 bg-zinc-50 snap-center scroll-mt-20">
       <h2 className={`text-4xl font-bold pb-2 text-center font-BebasNeue ${viewClasses}`}>Let's Get <span className="text-emerald-700">To Work</span></h2>
       <p className={`text-gray-500 px-4 md:px-0 text-center mb-10 ${viewClasses} delay-200`}>We would love to work with you. Leave us your contact information and we will be in touch as soon as possible. </p>
-      <form onSubmit={handleSubmit} className={`flex flex-col w-3/4 lg:w-1/2 gap-4 justify-center ${}`}>
+      <form onSubmit={handleSubmit} className={`flex flex-col w-3/4 lg:w-1/2 gap-4 justify-center ${viewClasses} delay-[400]`}>
         <input onChange={(e) => setName(e.target.value)} value={name} className={`p-3 rounded-lg outline-2 hover:outline focus:outline outline-emerald-700/50 shadow-md`} type="text" placeholder="Your Name" />
         <input onChange={(e) => setEmail(e.target.value)} value={email} className={`p-3 rounded-lg outline-2 hover:outline focus:outline outline-emerald-700/50 shadow-md`} type="email" placeholder="Your Email" />
         <div className="flex flex-col md:flex-row w-full gap-4">
