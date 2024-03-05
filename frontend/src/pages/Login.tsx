@@ -1,6 +1,7 @@
 // Login.tsx
 import React, { useEffect } from 'react';
 import { useAuth } from '../AuthProvider';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
   const { login } = useAuth();
@@ -22,9 +23,14 @@ const Login: React.FC = () => {
     handleLoginRedirect();
   }, [login]); // Adding login to the dependency array ensures useEffect gets re-run if login changes
 
+  const navigate = useNavigate();
+
   const handleLoginClick = () => {
     // Redirect to the /api/login route of your Flask backend
-    window.location.href = 'http://localhost:5000/api/login';
+    if (process.env.NODE_ENV === 'development')
+      window.location.href = 'http://localhost:5000/api/login'
+    else
+      navigate('/api/login')
   };
 
   return (

@@ -13,7 +13,12 @@ module.exports = {
         sans: ['HelveticaNow', 'sans-serif'],
         serif: ['Merriweather', 'serif'],
         BebasNeue: ['BebasNeue-Regular', 'sans-serif']
-      }
+      },
+      variants: {
+        extend: {
+          rotateY: ['group-focus'],
+        },
+      },
     },
   },
   plugins: [],
