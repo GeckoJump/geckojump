@@ -1,3 +1,4 @@
+from time import sleep
 from utils.recaptcha_protect import recaptcha_protect
 from mail.mailer import on_contact_form_submit
 from flask import Flask, jsonify, request, render_template, send_from_directory, session, redirect, current_app
@@ -29,42 +30,21 @@ oauth.register(
     name='google',
     client_id= os.environ['GOOGLE_CLIENT_ID'],
     client_secret=os.environ['GOOGLE_CLIENT_SECRET'],
-    #authorize_url='https://accounts.google.com/o/oauth2/auth',
-    #authorize_params={},
-    #access_token_url='https://accounts.google.com/o/oauth2/token',
-    #access_token_params=None,
-    #access_token_method='POST',
-    #refresh_token_url=None,
-    #refresh_token_params=None,
     redirect_uri=f'{API_BASE_URL}/api/auth',
     client_kwargs={'scope': 'openid email profile'},
     server_metadata_url= 'https://accounts.google.com/.well-known/openid-configuration',
 )
 
 
-# # Serve the React frontend
-# @app.route('/')
-# def serve_frontend():
-#     return send_from_directory(os.path.join(os.getcwd(), 'frontend', 'public'), 'index.html')
-
-# # Serve static files from the 'build' directory
-# @app.route('/<path:path>')
-# def serve_static(path):
-#     return send_from_directory(os.path.join(os.getcwd(), 'frontend', 'public'), path)
-
-
-
-# class HelloWorld(Resource):
-#     def get(self):
-#         return {'hello': 'world'}
-
-# api.add_resource(HelloWorld, '/')
-
-
 @app.route('/api/login')
 def login():
     redirect_uri = f'{API_BASE_URL}/api/auth'
     return oauth.google.authorize_redirect(redirect_uri)
+
+@app.route('/api/logout', methods=['POST'])
+def logout():
+    session.pop('user', None)
+    return jsonify({'message': 'User logged out'}), 200
 
 @app.route('/api/auth')
 def auth():

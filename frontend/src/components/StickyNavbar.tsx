@@ -5,11 +5,11 @@ import { ScrollLink } from './ScrollLink';
 import { useAuth } from '../AuthProvider';
 import logo from '../logo.png'
 import { Twirl } from 'hamburger-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { StyledLink } from './StyledLink';
 
 const StickyNavbar: React.FC = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, login } = useAuth();
   const [isNavOpen, setIsNavOpen] = React.useState(false);
 
   useEffect(() => {
@@ -19,6 +19,33 @@ const StickyNavbar: React.FC = () => {
       document.body.style.overflow = 'auto';
     }
   }, [isNavOpen]);
+
+  useEffect(() => {
+    console.log('useEffect for Login');
+    const handleLoginRedirect = async () => {
+      const queryParams = new URLSearchParams(window.location.search);
+      const token = queryParams.get('token');
+
+      if (token) {
+        login(token); // Assuming your login function is now adapted to accept the token as an argument
+        // Redirect to dashboard or another page as needed
+      }else {
+        console.log('token not found...');
+      }
+    };
+
+    handleLoginRedirect();
+  }, [login]); // Adding login to the dependency array ensures useEffect gets re-run if login changes
+
+  const navigate = useNavigate();
+
+  const handleLoginClick = () => {
+    // Redirect to the /api/login route of your Flask backend
+    if (process.env.NODE_ENV === 'development')
+      window.location.href = 'http://localhost:5000/api/login'
+    else
+      navigate('/api/login')
+  };
 
   // Define the classes for links
   const NavLinkClasses = "text-zinc-300 font-semibold text-sm p-3 transition-all duration-150 ease-in"
@@ -41,7 +68,7 @@ const StickyNavbar: React.FC = () => {
               <ScrollLink to="contact-section" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Contact</ScrollLink>
               {isAuthenticated ? 
                 <button onClick={logout} className={NavLinkClasses}>Logout</button> :
-                <Link to="/login" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Login</Link>}
+                <button onClick={handleLoginClick} className={NavLinkClasses}>Login</button>}
             </div>
           </div>
           {/* Hamburger Menu when small, normal nav when large */}
@@ -56,7 +83,7 @@ const StickyNavbar: React.FC = () => {
               <ScrollLink to="contact-section" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Contact</ScrollLink>
               {isAuthenticated ? 
                 <button onClick={logout} className={NavLinkClasses}>Logout</button> :
-                <StyledLink to="/login" className={NavLinkClasses} onClick={() => setIsNavOpen(false)}>Login</StyledLink>}
+                <button onClick={handleLoginClick} className={NavLinkClasses}>Login</button>}
         </div>
       </div>
       </div>
