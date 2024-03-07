@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { TypeAnimation } from 'react-type-animation'
 import { useInView } from 'react-intersection-observer'
+import { FaArrowAltCircleDown, FaArrowDown } from 'react-icons/fa'
+import { RiArrowDownSLine } from 'react-icons/ri'
 
 export const HeroSection = () => {
 
@@ -20,9 +22,9 @@ export const HeroSection = () => {
     <div id="hero-section" className="flex flex-col w-full snap-start">
       <section className="flex flex-col justify-center bg-background text-white h-screen">
         <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
-          <div className="flex flex-col justify-center mx-auto max-w-3xl w-full text-center">
+          <div className="grid grid-rows-6 grid-cols-1 justify-center mx-auto max-w-3xl w-full text-left md:text-center">
             <h1
-              className="bg-gradient-to-r from-green-700 via-green-400 to-blue-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl md:text-5xl"
+              className="row-start-3 bg-gradient-to-r from-green-700 via-green-400 to-blue-600 bg-clip-text text-3xl font-extrabold text-transparent sm:text-4xl md:text-5xl"
             >
               <TypeAnimation
                 wrapper="span"
@@ -36,11 +38,22 @@ export const HeroSection = () => {
                 ]}
                 preRenderFirstString={true}
                 speed={50}
-                />
+              />
             </h1>
-            <p className={`mx-auto mt-4 max-w-md sm:text-xl/relaxed transition-all duration-1000 text-slate-300 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
-              We specialize in crafting custom software solutions by understanding your business needs.
+            <p className={`row-start-4 mx-auto mt-1 sm:text-xl transition-all duration-1000 text-slate-300 ${typedOut ? 'opacity-100' : 'opacity-0'} ${typedOut ? '' : 'translate-y-4'}`}>
+              Dive deeper into how our commitment to your success sets us apart.
             </p>
+            <div 
+              className={`flex justify-center row-start-6 p-6 duration-1000 cursor-pointer ${typedOut ? 'opacity-100' : 'opacity-0'}`}
+              onClick={() => {
+                document.getElementById('values-section')?.scrollIntoView({ behavior: 'smooth' })
+              }}
+            >
+              <RiArrowDownSLine
+                size={32}
+                className="text-white animate-bounce"
+              />
+            </div>
           </div>
         </div>
       </section>

@@ -41,17 +41,17 @@ export const ServicesSection = () => {
     <div id="values-section" ref={ref} className='snap-center scroll-mt-20'>
       <div className={`flex flex-col justify-center align-middle duration-1000 ${inView ? 'transition-all opacity-100 translate-y-0' : 'transition-none opacity-0 translate-y-8'}`}>
         <div className='text-center px-2 mb-2'>
-          <h2 className='text-4xl font-bold font-BebasNeue'>WHY <span className='text-emerald-700'>CHOOSE US</span></h2>
+          <h2 className='text-4xl font-bold font-BebasNeue'>YOUR PARTNER <span className='text-emerald-700'>IN SUCCESS</span></h2>
           <p className='text-gray-500 mb-4 mt-1 lg:w-2/5 md:w-4/5 mx-auto'>
-            Our commitment to <span className="font-bold">you</span> extends beyond delivering premium software solutions. We are dedicated to building long-lasting, quality relationships with our clients.
+            We're here to change the narrative by proving that a tech partner can indeed put client relationships at the forefront.
           </p>
         </div>
-        <div className='grid md:grid-cols-2 sm:grid-cols-1 xl:grid-cols-4 xl:grid-rows-1 xl:max-w-screen-xl w-3/4 xl:w-11/12 max-w-screen-sm grid-rows-[1fr,1fr] items-stretch mx-auto gap-6 lg:mt-8'>
+        <div className='grid md:grid-cols-2 sm:grid-cols-1 xl:grid-cols-3 xl:grid-rows-1 xl:max-w-screen-xl w-2/3 max-w-screen-sm grid-rows-[1fr,1fr] items-stretch mx-auto gap-6 lg:mt-8'>
           <ValueItem
             index={0}
-            title='Quality Relationships'
-            subtitle='Commitment to You'
-            description='Our team is dedicated to building long-lasting, quality relationships with our clients.'
+            title='Unmatched Relationships'
+            subtitle='Building Better Together'
+            description={'We believe the foundation of any successful project is a genuine relationship. That\'s why we dedicate ourselves to being not just a service provider but a trusted partner.'}
             icon={<IconImage src={QualityRelationshipsIcon} alt='Quality Relationships' className='max-w-[128px]' />}
             onFocus={onItemFocus}
           />
@@ -59,28 +59,18 @@ export const ServicesSection = () => {
             index={1}
             title='Tailored Service'
             subtitle='Unique Solutions for You'
-            description='We learn what makes your business unique in order to provide tailored solutions that will help you succeed.'
+            description='Your business is unique, and so should be your software. We dive deep into what sets your company apart to deliver personalized solutions that truly make a difference.'
             icon={<IconImage src={TailoredServiceIcon} alt='Tailored Service' className='w-3/5' />}
             onFocus={onItemFocus}
           />
           <ValueItem
             index={2}
-            title='Software Expertise'
-            subtitle='Best Solutions for You'
-            description='Our team has the expertise to provide the best solutions for your business.'
+            title='Expertise Meets Care'
+            subtitle='Expert Guidance, Personal Touch'
+            description='Combining top-notch expertise with a genuine commitment to your success, we ensure you have the dedicated support needed to thrive.'
             icon={<IconImage src={SoftwareExpertiseIcon} alt='Software Expertise' className='w-3/5' />}
             onFocus={onItemFocus}
           />
-          <ValueItem
-            index={3}
-            title='Constant Innovation'
-            subtitle='Always Looking Forward'
-            description='We are always looking for innovative ways to help your business succeed.'
-            icon={<IconImage src={InnovationIcon} alt='Constant Innovation' className='w-3/5' />}
-            onFocus={onItemFocus}
-          />
-
-
         </div>
       </div>
     </div>
