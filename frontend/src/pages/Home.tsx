@@ -19,16 +19,14 @@ function App() {
       <HeroSection />
       <ServicesSection />
       <SectionDivider className='pt-24 lg:pt-48 xl:pt-64' />
-      <TwoSidedLayout>
+      <TwoSidedLayout additionalClasses='bg-neutral-100'>
         <SoftwareServicesSection />
         <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
       </TwoSidedLayout>
-      <SectionDivider className='pt-24 lg:pt-48' />
-      <TwoSidedLayout additionalClasses='[&>*:first-child]:order-last md:[&>*:first-child]:order-first'>
+      <TwoSidedLayout flip>
         <img src={TechIllustration2} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
         <ConsultingServicesSection />
       </TwoSidedLayout>
-      <SectionDivider className='pt-12 lg:pt-24' />
       <ContactSection />
       <Footer />
     </>

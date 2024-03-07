@@ -13,8 +13,11 @@ export interface ScrollLinkProps {
 export const ScrollLink = ({ to, children, block, className, onClick, disableUnderline = false }: ScrollLinkProps) => {
   const scrollHere = () => {
     const element = document.getElementById(to);
+    const navBar = document.getElementById('sticky-navbar');
+    const navHeight = navBar?.clientHeight || 0;
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: block ?? 'start' });
+      const y = element.getBoundingClientRect().top + window.scrollY - navHeight - 10;
+      window.scrollTo({ top: y, behavior: 'smooth' });
     }
     onClick && onClick(); // Call the onClick prop if it exists
   }
