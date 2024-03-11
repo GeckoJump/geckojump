@@ -52,7 +52,7 @@ export const ServicesSection = () => {
             title='Unmatched Relationships'
             subtitle='Building Better Together'
             description={'We believe the foundation of any successful project is a genuine relationship. That\'s why we dedicate ourselves to being not just a service provider but a trusted partner.'}
-            icon={<IconImage src={QualityRelationshipsIcon} alt='Quality Relationships' className='max-w-[128px]' />}
+            icon={<IconImage src={QualityRelationshipsIcon} alt='Quality Relationships' size={172} />}
             onFocus={onItemFocus}
           />
           <ValueItem
@@ -60,7 +60,7 @@ export const ServicesSection = () => {
             title='Tailored Service'
             subtitle='Unique Solutions for You'
             description='Your business is unique, and so should be your software. We dive deep into what sets your company apart to deliver personalized solutions that truly make a difference.'
-            icon={<IconImage src={TailoredServiceIcon} alt='Tailored Service' className='w-3/5' />}
+            icon={<IconImage src={TailoredServiceIcon} alt='Tailored Service' size={172} />}
             onFocus={onItemFocus}
           />
           <ValueItem
@@ -68,7 +68,7 @@ export const ServicesSection = () => {
             title='Expertise Meets Care'
             subtitle='Expert Guidance, Personal Touch'
             description='Combining top-notch expertise with a genuine commitment to your success, we ensure you have the dedicated support needed to thrive.'
-            icon={<IconImage src={SoftwareExpertiseIcon} alt='Software Expertise' className='w-3/5' />}
+            icon={<IconImage src={SoftwareExpertiseIcon} alt='Software Expertise' size={172} />}
             onFocus={onItemFocus}
           />
         </div>

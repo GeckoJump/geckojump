@@ -11,6 +11,7 @@ import TechIllustration2 from '../svg/tech-illustration-2.svg'
 import { SectionDivider } from '../components/SectionDivider';
 import { ConsultingServicesSection } from '../sections/ConsultingServicesSection';
 import { ContactSection } from '../sections/ContactSection';
+import StudentSection from '../sections/StudentSection';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
         <SoftwareServicesSection />
         <img src={TechIllustration1} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
       </TwoSidedLayout>
+      <StudentSection />
       <TwoSidedLayout flip>
         <img src={TechIllustration2} className="scale-75 lg:scale-100" alt='Tech Illustration 1' />
         <ConsultingServicesSection />
