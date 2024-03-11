@@ -12,7 +12,7 @@ import os
 import config
 import dotenv
 
-dotenv.load_dotenv()
+dotenv.load_dotenv('.env.local')
 
 app = Flask(__name__)
 app.config.from_object(config.Config)
