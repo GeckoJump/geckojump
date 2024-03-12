@@ -21,12 +21,12 @@ const StudentSection = () => {
   return (
     <section ref={ref} className="w-full text-white bg-neutral-800">
       <div className={`w-[90%] xl:w-3/4 grid grid-cols-12 lg:gap-x-12 lg:grid-rows-1 justify-center py-16 lg:py-24 px-4 mx-auto transition-all duration-1000 ${inView ? IN_VIEW_CLASSES : OUT_OF_VIEW_CLASSES}`}>
-        <div className="col-span-12 lg:col-span-8">
+        <div className="col-span-12 md:col-span-10 md:col-start-2 lg:col-span-8">
           <h2 className="text-2xl lg:text-4xl text-zinc-100 font-BebasNeue leading-snug tracking-wide">Crafted by <span className='text-emerald-700'>Future Innovators</span></h2>
           <h3 className="text-md text-zinc-300 mb-6 tracking-tight"></h3>
           <div className='text-zinc-300 hidden lg:block'>
-            <p className="text-lg mb-12 pr-4 leading-relaxed indent-4">GeckoJump™ is not just a company; it’s a movement. Founded by visionary students committed to making a tangible impact in the tech industry, we continue to grow with a team fueled by the brightest minds from academia. Our journey is a testament to what student innovation, driven by fresh ideas and boundless energy, can achieve.</p>
-            <p className="text-lg pr-4 leading-relaxed indent-4">Our founders, still navigating their academic paths, envisioned a new kind of tech company—one where the energy, creativity, and cutting-edge knowledge of students transform how businesses interact with technology. GeckoJump™ stands as a beacon of student entrepreneurship, demonstrating the remarkable outcomes when youthful innovation meets industry experience.</p>
+            <p className="text-md mb-8 pr-4 leading-relaxed indent-4">GeckoJump™ is not just a company; it’s a movement. Founded by visionary students committed to making a tangible impact in the tech industry, we continue to grow with a team fueled by the brightest minds from academia. Our journey is a testament to what student innovation, driven by fresh ideas and boundless energy, can achieve.</p>
+            <p className="text-md pr-4 leading-relaxed indent-4">Our founders, still navigating their academic paths, envisioned a new kind of tech company—one where the energy, creativity, and cutting-edge knowledge of students transform how businesses interact with technology. GeckoJump™ stands as a beacon of student entrepreneurship, demonstrating the remarkable outcomes when youthful innovation meets industry experience.</p>
           </div>
           <Accordion type="single" collapsible className="lg:hidden block text-zinc-300">
             <AccordionItem value="item-1">
